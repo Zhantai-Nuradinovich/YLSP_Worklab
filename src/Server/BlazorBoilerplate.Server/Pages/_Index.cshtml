@@ -1,0 +1,139 @@
+﻿@page "/"
+@namespace BlazorBoilerplate.Server.Pages
+@using BlazorBoilerplate.Infrastructure.Server
+@using BlazorBoilerplate.Shared.Models
+@using BlazorBoilerplate.Shared.Providers
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.AspNetCore.Localization
+@using System.Globalization
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, BlazorBoilerplate.Shared
+@inject IWebHostEnvironment env
+@inject ITenantSettings<MainConfiguration> mainConfiguration
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    @if (mainConfiguration.Value.Runtime == Shared.Dto.Db.BlazorRuntime.Server)
+    {
+        <title>YLSP (Server)</title>
+    }
+    else
+    {
+        <title>YLSP (WASM)</title>
+    }
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/logo-work.png">
+    <link rel="icon" type="image/x-icon" href="~/images/favicon.ico">
+    <base href="~/" />
+    <link href="manifest.json" rel="manifest" />
+
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+<body>
+    @{
+        if (HttpContext.Request.Cookies[CookieRequestCultureProvider.DefaultCookieName] == null)
+            HttpContext.Response.Cookies.Append(
+               CookieRequestCultureProvider.DefaultCookieName,
+               CookieRequestCultureProvider.MakeCookieValue(
+                 new RequestCulture(
+                     CultureInfo.CurrentCulture,
+                     CultureInfo.CurrentUICulture)),
+                 new Microsoft.AspNetCore.Http.CookieOptions() { Expires = DateTimeOffset.Now.AddDays(30) });
+    }
+
+    @if (mainConfiguration.Value.Runtime == Shared.Dto.Db.BlazorRuntime.Server)
+    {
+        @(Html.AntiForgeryToken())
+        <app>
+            <component type="ModuleProvider.RootComponentMapping.ComponentType" render-mode="Server" />
+        </app>
+    }
+    else
+    {
+        <app wasm>
+        </app>
+    }
+
+    <div id="blazor-error-ui">
+        <i class="material-icons">error</i>
+        <environment include="Staging,Production">
+            An error has occurred. This application may no longer respond until reloaded.
+        </environment>
+        <environment include="Development">
+            An unhandled exception has occurred. See browser dev tools for details.
+        </environment>
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+
+    @if (mainConfiguration.Value.Runtime == Shared.Dto.Db.BlazorRuntime.Server)
+    {
+        <script src="_framework/blazor.server.js"></script>
+    }
+    else
+    {
+        <script src="_framework/blazor.webassembly.js"></script>
+    }
+    <!-- load remaining JS after blazor boot loads -->
+    <script src="js/interop.js"></script>
+    <!-- https://docs.microsoft.com/en-us/aspnet/core/blazor/progressive-web-app -->
+    <script>navigator.serviceWorker.register('service-worker.js');</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+
+
+    <script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script type="module">
+        import Swiper from 'https://unpkg.com/swiper/swiper-bundle.esm.browser.min.js'
+        window.initializeCarousel = () => {
+            const swiper = new Swiper('.carousel-gallery .swiper-container', {
+                effect: 'slide',
+                speed: 900,
+                slidesPerView: 3,
+                spaceBetween: 20,
+                simulateTouch: true,
+                autoplay: {
+                    delay: 5000,
+                    stopOnLastSlide: false,
+                    disableOnInteraction: false
+                },
+                pagination: {
+                    el: '.carousel-gallery .swiper-pagination',
+                    clickable: true
+                },
+                breakpoints: {
+                    // when window width is <= 320px
+                    320: {
+                        slidesPerView: 1,
+                        spaceBetween: 5
+                    },
+                    // when window width is <= 480px
+                    425: {
+                        slidesPerView: 2,
+                        spaceBetween: 10
+                    },
+                    // when window width is <= 640px
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 20
+                    }
+                }
+            });
+        }
+                    /*http://idangero.us/swiper/api/ */
+    </script>
+</body>
+</html>
