@@ -1,0 +1,188 @@
+﻿@page "/program_list"
+@inject IApiClient apiClient
+@inject IMatToaster matToaster
+@inject IStringLocalizer<Global> L
+@inject NavigationManager navigationManager
+
+<MainContainer Title="Worklab" SubTitle="Погрузись в эту профессию с головой" ContentTitle="Эконом">
+
+    @if (IsAdminOrCoordinator)
+    {
+        <div style="width:135px;">
+            <MatButton Icon="playlist_add" Label="Новое направление" OnClick="@((e) => OpenDialog())" Raised="true"></MatButton>
+        </div>
+    }
+    <MatDivider />
+
+    <div class="content">
+        <h1 class="heading">
+            Название направления
+        </h1>
+        @foreach (var program in courses)
+        {
+            <div class="card">
+                <div class="front" style="background-image: url(//source.unsplash.com/300x40&quot;+n+&quot;);">
+                    <p>@program.CourseName</p>
+                </div>
+                <div class="back">
+                    <div>
+                        <p>@program.Annotation</p>
+                        <button class="button" style="color: white;">
+                            <MatButton Link="@navigationManager.ToAbsoluteUri("courses/"+program.Id).AbsoluteUri">Попробовать</MatButton>
+                        </button>
+                        @if (IsAdminOrCoordinator)
+                        {
+                            <MatIconButton Icon="delete" OnClick="@(() => OpenDeleteDialog(program.Id))"></MatIconButton>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+
+    </div>
+
+    <MatDialog @bind-IsOpen="@courseDialogIsOpen">
+        <MatDialogTitle>Создать</MatDialogTitle>
+        <MatDialogContent>
+            <EditForm Model="@course" OnValidSubmit="@NewEntity">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <fieldset>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@course.CourseName" Label="Название" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@course.DirectionName" Label="Название направления" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@course.Annotation" Label="Описание" TextArea="true" FullWidth="true"></MatTextField>
+                    </div>
+                    <div class="form-group">
+                        <MatTextField @bind-Value="@course.PicturePath" Label="Путь к картинке, если надо" Icon="title" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                    </div>
+                </fieldset>
+            </EditForm>
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => { courseDialogIsOpen = false; })">Закрыть</MatButton>
+            <MatButton OnClick="@NewEntity">Завершить</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+
+    <MatDialog @bind-IsOpen="@courseDeleteDialogOpen" Style="z-index:100">
+        <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить удаление</MatDialogTitle>
+        <MatDialogContent>
+            Хотите удалить @course.CourseName ?
+        </MatDialogContent>
+        <MatDialogActions>
+            <MatButton OnClick="@(e => { courseDeleteDialogOpen = false; })">Закрыть</MatButton>
+            <MatButton OnClick="@Delete">Удалить</MatButton>
+        </MatDialogActions>
+    </MatDialog>
+
+</MainContainer>
+
+
+@code {
+    List<Course> courses = new List<Course>();
+    Course course { get; set; } = new Course();
+
+    private bool IsAdminOrCoordinator = false;
+
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    bool courseDeleteDialogOpen = false;
+    bool courseDialogIsOpen = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMainEntities();
+
+        var user = (await authenticationStateTask).User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            IsAdminOrCoordinator = user.IsInRole("Administrator") || user.IsInRole("Coordinator");
+        }
+    }
+
+    async Task LoadMainEntities()
+    {
+        try
+        {
+            var result = await apiClient.GetCourses();
+            courses = new List<Course>(result);
+            matToaster.Add(L["One item found", Plural.From("{0} items found", (int)result.InlineCount)], MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+    }
+
+    public async void Update(Course course)
+    {
+        try
+        {
+            await apiClient.SaveChanges();
+
+            matToaster.Add($"{course.CourseName} updated", MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+    }
+
+    public async Task Delete()
+    {
+        try
+        {
+            apiClient.RemoveEntity(course);
+            await apiClient.SaveChanges();
+            courses.Remove(course);
+            matToaster.Add($"{course.CourseName} deleted", MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+
+        course = new Course();
+
+        courseDeleteDialogOpen = false;
+    }
+
+    public void OpenDialog()
+    {
+        courseDialogIsOpen = true;
+    }
+
+    public void OpenDeleteDialog(int courseID)
+    {
+        course = courses.Where(x => x.Id == courseID).SingleOrDefault();
+        courseDeleteDialogOpen = true;
+    }
+
+    public async Task NewEntity()
+    {
+        courseDialogIsOpen = false;
+
+        try
+        {
+            apiClient.AddEntity(course);
+
+            await apiClient.SaveChanges();
+
+            await LoadMainEntities();
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+
+        course = new Course();
+    }
+}

@@ -33,22 +33,22 @@ namespace BlazorBoilerplate.Shared.Dto.Db
             set { SetValue(value); }
         }
 
-        //ICollection<IQuizItem> IQuiz.Items { get => Items.Select(i => (IQuizItem)i).ToList(); set => Items = (NavigationSet<QuizItem>)value; }
-
-
-        //public NavigationSet<QuizItem> Items
-        //{
-        //    get { return GetValue<NavigationSet<QuizItem>>(); }
-        //    set { SetValue(value);  }
-        //}
-
-        ICollection<IQuizItem> IQuiz.Items { get => Items.Select(i => (IQuizItem)i).ToList();}
+        ICollection<IQuizItem> IQuiz.Items { get => Items.Select(i => (IQuizItem)i).ToList(); set => Items = (NavigationSet<QuizItem>)value; }
 
 
         public NavigationSet<QuizItem> Items
         {
             get { return GetValue<NavigationSet<QuizItem>>(); }
+            set { SetValue(value); }
         }
+
+        //ICollection<IQuizItem> IQuiz.Items { get => Items.Select(i => (IQuizItem)i).ToList();}
+
+
+        //public NavigationSet<QuizItem> Items
+        //{
+        //    get { return GetValue<NavigationSet<QuizItem>>(); }
+        //}
 
         ICourse IQuiz.Course { get => Course; set => Course = (Course)value; }
 

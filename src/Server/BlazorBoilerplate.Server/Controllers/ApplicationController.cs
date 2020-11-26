@@ -66,6 +66,36 @@ namespace BlazorBoilerplate.Server.Controllers
         }
 
         [HttpGet]
+        public IQueryable<Course> Courses()
+        {
+            return persistenceManager.GetEntities<Course>().OrderBy(i => i.Id);
+        }
+
+        [HttpGet]
+        public IQueryable<Comment> Comments()
+        {
+            return persistenceManager.GetEntities<Comment>().OrderByDescending(i => i.When);
+        }
+
+        [HttpGet]
+        public IQueryable<Quiz> Quizzes()
+        {
+            return persistenceManager.GetEntities<Quiz>().OrderByDescending(i => i.When);
+        }
+
+        [HttpGet]
+        public IQueryable<QuizItem> QuizItems()
+        {
+            return persistenceManager.GetEntities<QuizItem>().OrderByDescending(i => i.When);
+        }
+
+        [HttpGet]
+        public IQueryable<Text> Texts()
+        {
+            return persistenceManager.GetEntities<Text>().OrderByDescending(i => i.When);
+        }
+
+        [HttpGet]
         public IQueryable<DbLog> Logs()
         {
             return persistenceManager.GetEntities<DbLog>().AsNoTracking().OrderByDescending(i => i.TimeStamp);

@@ -62,7 +62,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorBoilerplate.EntityGen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorBoilerplate.Shared.DataInterfaces", "Shared\BlazorBoilerplate.Shared.DataInterfaces\BlazorBoilerplate.Shared.DataInterfaces.csproj", "{2D67021C-4608-464A-9ECA-2EA5CC56D6CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorBoilerplate.Shared.Localizer", "Shared\BlazorBoilerplate.Shared.Localizer\BlazorBoilerplate.Shared.Localizer.csproj", "{746B25CA-DAEC-4A90-9ED5-357038C675D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorBoilerplate.Shared.Localizer", "Shared\BlazorBoilerplate.Shared.Localizer\BlazorBoilerplate.Shared.Localizer.csproj", "{746B25CA-DAEC-4A90-9ED5-357038C675D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,122 @@
+﻿@page "/courses/{CourseId}"
+@inject IApiClient apiClient
+@inject IMatToaster matToaster
+@inject IStringLocalizer<Global> L
+@inject NavigationManager navigationManager
+@inject AuthenticationStateProvider authStateProvider
+@using BlazorBoilerplate.Shared.Models.Account
+@using Breeze.Sharp
+
+<MainContainer ContentTitle="Начнём!">
+
+
+
+    <MatButton Label="Вперед"
+               Style="background-color: #4F94C1; color: snow; border-radius: 5px; margin: 10px;"
+               OnClick="NextStep">
+    </MatButton>
+
+    <CommentSection userViewModel="@userViewModel" CourseId="@int.Parse(CourseId)" />
+</MainContainer>
+
+@code {
+    bool IsAdminOrCoordinator { get; set; } = false;
+
+    [Parameter]
+    public string CourseId { get; set; }
+
+    UserViewModel userViewModel { get; set; } = new UserViewModel();
+
+    List<Quiz> quizzes = new List<Quiz>();
+    List<QuizItem> quizItems = new List<QuizItem>();
+    List<Text> texts = new List<Text>();
+    List<Comment> comments = new List<Comment>();
+    List<object> content { get; set; } = new List<object>();
+
+    IEnumerator<object> enumerator;
+    object oneContent;
+
+    [CascadingParameter]
+    Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = (await authenticationStateTask).User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            IsAdminOrCoordinator = user.IsInRole("Administrator") || user.IsInRole("Coordinator");
+        }
+
+        userViewModel = await ((IdentityAuthenticationStateProvider)authStateProvider).GetUserViewModel();
+
+        await ReadTexts();
+        await ReadQuizzes();
+        await ReadQuizItems();
+        content.AddRange(quizzes);
+        content.AddRange(texts);
+        content =
+        content = content.OrderBy(t => t is Quiz? ((Quiz)t).When : ((Text)t).When).ToList();
+
+        enumerator = content.GetEnumerator();
+
+        if (enumerator.MoveNext())
+        {
+            oneContent = enumerator.Current;
+        }
+    }
+
+    public void NextStep()
+    {
+        oneContent = enumerator.MoveNext() ? enumerator.Current : null;
+    }
+
+    async Task ReadQuizzes()
+    {
+        try
+        {
+            var result = await apiClient.GetQuizzes(int.Parse(CourseId));
+            quizzes = new List<Quiz>(result);
+            matToaster.Add(L["One item found", Plural.From("{0} items found", (int)result.InlineCount)], MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+    }
+
+    async Task ReadQuizItems()
+    {
+        foreach (var quiz in quizzes)
+        {
+            try
+            {
+                var result = await apiClient.GetQuizItems(quiz.Id);
+                var middleware = new List<QuizItem>(result);
+                foreach (var item in middleware)
+                {
+                    quiz.Items.Add(item);
+                }
+                matToaster.Add(L["One item found", Plural.From("{0} items found", (int)result.InlineCount)], MatToastType.Success, L["Operation Successful"]);
+            }
+            catch (Exception ex)
+            {
+                matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+            }
+        }
+    }
+
+    async Task ReadTexts()
+    {
+        try
+        {
+            var result = await apiClient.GetTexts(int.Parse(CourseId));
+            texts = new List<Text>(result);
+            matToaster.Add(L["One item found", Plural.From("{0} items found", (int)result.InlineCount)], MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+    }
+}

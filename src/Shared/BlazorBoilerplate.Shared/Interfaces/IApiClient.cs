@@ -18,5 +18,15 @@ namespace BlazorBoilerplate.Shared.Interfaces
         Task<QueryResult<ApiLogItem>> GetApiLogs(Expression<Func<ApiLogItem, bool>> predicate = null, int? take = null, int? skip = null);
 
         Task<QueryResult<Todo>> GetToDos();
+
+        Task<QueryResult<Course>> GetCourses();
+
+        Task<QueryResult<Quiz>> GetQuizzes(Int32 courseID);
+
+        Task<QueryResult<QuizItem>> GetQuizItems(Int32 quizID);
+
+        Task<QueryResult<Text>> GetTexts(Int32 courseID);
+
+        Task<QueryResult<Comment>> GetComments(Int32 courseID);
     }
 }
