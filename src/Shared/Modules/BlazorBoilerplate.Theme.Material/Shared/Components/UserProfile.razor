@@ -4,8 +4,8 @@
 
 <AuthorizeView>
     <Authorized>
-        <div class="drawer-profile">
-            <MatIconButton Icon="account_circle" Link="/account/profile"></MatIconButton>
+        <MatNavItem Href="/account/profile">
+            <MatIcon Icon="account_circle"></MatIcon>
             @if (userViewModel == null)
             {
                 <div class="spinner-border spinner-border-sm" role="status"></div>
@@ -14,7 +14,7 @@
             {
                 <span class="miniHover"><b><a href="/account/profile">@userViewModel.UserName</a></b></span>
             }
-        </div>
+        </MatNavItem>
     </Authorized>
 </AuthorizeView>
 

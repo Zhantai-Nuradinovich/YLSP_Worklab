@@ -2,37 +2,42 @@
 @inherits ForumPageModel
 @inject IStringLocalizer<Global> L
 
-<AuthorizeView Context="AuthorizeContext">
-    <NotAuthorized>
-        <div class="alert alert-success">
-            <a href="@BlazorBoilerplate.Constants.Settings.LoginPath">Log in</a> to post a message.
-        </div>
-    </NotAuthorized>
-</AuthorizeView>
 
-<h1>Forum</h1>
-<p>This forum page uses SignalR and persists in a database.</p>
+<MainContainer Style="box-shadow: 1px 1px 0 500px rgba(0, 0, 0, 0.5) inset;"
+               Title="Worklab"
+               ContentTitle="Добро пожаловать в чат!">
+    <AuthorizeView Context="AuthorizeContext">
+        <NotAuthorized>
+            <div class="alert alert-success">
+                <a href="@BlazorBoilerplate.Constants.Settings.LoginPath">Войдите</a> чтобы написать.
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
 
-<AuthorizeView Context="AuthorizeContext">
-    <Authorized>
-        <ForumMessageCreateForm Send="Send" />
-
-        <MatList SingleSelection="true" TwoLine="true">
-            @if (Messages == null || Messages.Count == 0)
-            {
-                <MatListItem>
-                    <MatListItemText>
-                        @L["Loading"]
-                    </MatListItemText>
-                </MatListItem>
-            }
-            else
-            {
-                @foreach (var message in Messages)
-                {
-                    <ForumMessage Delete="Delete" Message="@message" />
-                }
-            }
-        </MatList>
-    </Authorized>
-</AuthorizeView>
+    <AuthorizeView Context="AuthorizeContext">
+        <Authorized>
+            <ForumMessageCreateForm Send="Send" />
+            <div class="comments-container">
+                <div class="comments-list">
+                    <MatList SingleSelection="true" TwoLine="true">
+                        @if (Messages == null || Messages.Count == 0)
+                        {
+                            <MatListItem>
+                                <MatListItemText>
+                                    @L["Загрузка"]
+                                </MatListItemText>
+                            </MatListItem>
+                        }
+                        else
+                        {
+                            @foreach (var message in Messages)
+                            {
+                                <ForumMessage Delete="Delete" Message="@message" />
+                            }
+                        }
+                    </MatList>
+                </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+</MainContainer>

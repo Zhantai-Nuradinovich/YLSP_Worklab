@@ -11,32 +11,32 @@
         <MatIconButton Icon="home" Class="float-left" Link="/" />
     </div>
     <div class="logo">
-        <img src="_content/BlazorBoilerplate.Theme.Material/images/logo.svg" style="width:100px;" /><br />BlazorBoilerplate
+        <img src="_content/BlazorBoilerplate.Theme.Material/images/logo-work.png" style="width:100px;" /><br /> Worklab
         <br />
-        <h4>@L["Registration"]</h4>
+        <h4>@L["Регистрация"]</h4>
     </div>
     <EditForm Model="@registerViewModel" OnValidSubmit="@RegisterUser">
         <FluentValidationValidator />
         <ValidationSummary />
         <fieldset>
             <div class="form-group">
-                <MatTextField @bind-Value="@registerViewModel.UserName" Label=@L["UserName"] Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                <MatTextField @bind-Value="@registerViewModel.UserName" Label=@L["Логин"] Icon="person" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
             </div>
             <div class="form-group">
                 <MatTextField @bind-Value="@registerViewModel.Email" Label=@L["Email"] Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
             </div>
             <div class="form-group">
-                <MatTextField @bind-Value="@registerViewModel.Password" Label=@L["Password"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                <MatTextField @bind-Value="@registerViewModel.Password" Label=@L["Пароль"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
             </div>
             <div class="form-group">
-                <MatTextField @bind-Value="@registerViewModel.PasswordConfirm" Label=@L["Password Confirmation"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                <MatTextField @bind-Value="@registerViewModel.PasswordConfirm" Label=@L["Подтвердите пароль"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
             </div>
             <div class="form-group d-flex justify-content-end">
-                <MatButton Type="submit" Raised="true">@L["Register"]</MatButton>
+                <MatButton Type="submit" Raised="true">@L["Зарегистрироваться"]</MatButton>
             </div>
             <hr />
             <NavLink href="account/login">
-                <h6 class="font-weight-normal text-center">@L["AlreadyRegistered"]</h6>
+                <h6 class="font-weight-normal text-center">@L["Уже зарегистрированы?"]</h6>
             </NavLink>
         </fieldset>
     </EditForm>
@@ -52,17 +52,17 @@
             var response = await ((IdentityAuthenticationStateProvider)authStateProvider).Register(registerViewModel);
             if (response.IsSuccessStatusCode)
             {
-                matToaster.Add("New User Email Verification was sent to: " + registerViewModel.Email, MatToastType.Success, L["UserCreationSuccessful"]);
+                matToaster.Add("Подтвердите почту: " + registerViewModel.Email, MatToastType.Success, L["Пользователь создан успешно"]);
                 navigationManager.NavigateTo("");
             }
             else
             {
-                matToaster.Add(response.Message, MatToastType.Danger, L["UserCreationFailed"]);
+                matToaster.Add(response.Message, MatToastType.Danger, L["Не удалось создать пользователя"]);
             }
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, L["UserCreationFailed"]);
+            matToaster.Add(ex.Message, MatToastType.Danger, L["Не удалось создать пользователя"]);
         }
     }
 }

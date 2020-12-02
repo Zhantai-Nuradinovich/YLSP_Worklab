@@ -52,7 +52,7 @@
                     }
                 }
             </div>
-            <EditForm OnValidSubmit="CreateMessage" Model="@comment" autocomplete="off">
+            <EditForm Model="@comment" autocomplete="off">
                 <div class="chat-message clearfix">
                     @if (Creating)
                     {
@@ -78,12 +78,17 @@
     [Parameter]
     public UserViewModel userViewModel { get; set; }
 
-    public List<Comment> Comments { get; set; }
+    public List<Comment> Comments { get; set; } = new List<Comment>();
 
     Comment comment { get; set; } = new Comment();
     bool IsOpened { get; set; }
     bool Creating { get; set; } = false;
     string avatar = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ReadComments();
+    }
 
     async Task ReadComments()
     {
@@ -99,19 +104,24 @@
         }
     }
 
-    async Task DeleteMessage(long id)
+    async Task DeleteMessage(int id)
     {
         try
         {
-            apiClient.RemoveEntity(comment);
+            var commentToDelete = Comments.Find(i => i.Id == id);
+            apiClient.RemoveEntity(commentToDelete);
+
             await apiClient.SaveChanges();
-            Comments.Remove(comment);
-            matToaster.Add($"{comment.Text} deleted", MatToastType.Success, L["Operation Successful"]);
+
+            Comments.Remove(commentToDelete);
+            StateHasChanged();
+            matToaster.Add($"{comment?.Text} deleted", MatToastType.Success, L["Operation Successful"]);
         }
         catch (Exception ex)
         {
             matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
         }
+        comment = new Comment();
     }
 
     async Task CreateMessage()
@@ -128,7 +138,8 @@
             apiClient.AddEntity(comment);
 
             await apiClient.SaveChanges();
-            Comments.Add(comment);
+
+            await ReadComments();
         }
         catch (Exception ex)
         {

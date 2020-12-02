@@ -6,10 +6,25 @@
 @inject AuthenticationStateProvider authStateProvider
 @using BlazorBoilerplate.Shared.Models.Account
 @using Breeze.Sharp
+@using BlazorBoilerplate.Theme.Material.Demo.Shared.Components.Text
+@using BlazorBoilerplate.Theme.Material.Demo.Shared.Components.Quiz
 
 <MainContainer ContentTitle="Начнём!">
 
-
+    @if (IsAdminOrCoordinator)
+    {
+        <CreateQuiz CourseId="@(int.Parse(CourseId))" />
+        <CreateText CourseId="@(int.Parse(CourseId))" />
+    }
+    <p class="heading">Надо посмотреть что-нибудь о пагинации контента и попробовать через енумератор. Продумать структуру как у курсеры и добавить привязку к пользователю + почитать об аналитике сайта</p>
+    @if (oneContent is Quiz quiz)
+    {
+        <OneQuiz Quiz="@quiz" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
+    }
+    else if (oneContent is Text text)
+    {
+        <OneText Text="@text" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
+    }
 
     <MatButton Label="Вперед"
                Style="background-color: #4F94C1; color: snow; border-radius: 5px; margin: 10px;"
@@ -30,7 +45,6 @@
     List<Quiz> quizzes = new List<Quiz>();
     List<QuizItem> quizItems = new List<QuizItem>();
     List<Text> texts = new List<Text>();
-    List<Comment> comments = new List<Comment>();
     List<object> content { get; set; } = new List<object>();
 
     IEnumerator<object> enumerator;

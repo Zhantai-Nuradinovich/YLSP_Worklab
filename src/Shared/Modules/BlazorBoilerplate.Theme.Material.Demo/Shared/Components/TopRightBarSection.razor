@@ -1,11 +1,10 @@
 ﻿@implements IDynamicComponent
 
-<DonateButton />
+<MatTooltip Tooltip="Главная">
+    <MatIconButton Link="/" RefBack="@context">Home</MatIconButton>
+</MatTooltip>
 <MatTooltip Tooltip="Программы">
     <MatIconButton Link="/program_list" RefBack="@context">Programs</MatIconButton>
-</MatTooltip>
-<MatTooltip Tooltip="Admin">
-    <MatIconButton Link="/admin" RefBack="@context"><i class="fa fa-gear" aria-hidden="true"></i></MatIconButton>
 </MatTooltip>
 <SelectCulture />
 <Login />

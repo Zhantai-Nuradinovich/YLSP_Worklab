@@ -11,15 +11,13 @@
 
 <AuthorizeView Context="AuthorizeContext">
     <Authorized>
-        <LoadingBackground ShowLogoBox="true">
-            <label>@L["Loading"]</label>
+        <LoadingBackground>
         </LoadingBackground>
     </Authorized>
     <NotAuthorized>
         @if (RedirectInProgress)
         {
-            <LoadingBackground ShowLogoBox="true">
-                <label>@L["Loading"]</label>
+            <LoadingBackground >
             </LoadingBackground>
         }
         else

@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Shared\Components\Quiz\" />
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
 

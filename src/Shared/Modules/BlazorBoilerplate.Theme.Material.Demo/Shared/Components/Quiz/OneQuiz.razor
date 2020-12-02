@@ -1,0 +1,163 @@
+﻿@inject IApiClient apiClient
+@inject IMatToaster matToaster
+@inject IStringLocalizer<Global> L
+
+@if (IsAdminOrCoordinator)
+{
+    <MatIconButton Icon="delete" OnClick="@(() => deleteDialogOpen = true)"></MatIconButton>
+}
+<div class="my-quiz-container" style="min-height: 400px;">
+    <div id="quiz">
+        <div class="container-fluid">
+            <div id="quiz-stats" class="row text-center">
+                <div class="col-xs-3">
+                    <i class="fa fa-bar-chart"></i>
+                </div>
+                @if (IsQuizStarted)
+                {
+                    <div class="col-xs-3 col-lg-2">
+                        <p>Вопрос</p>
+                        <span class="animated">@curentQuestion/@Quiz.Items.Count</span>
+                    </div>
+                }
+                <div class="col-xs-3 col-lg-2 animated">
+                    <p>@Quiz?.QuizName</p>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row" style="justify-content: center;">
+                <div class="col-xs-12 col-md-10 col-md-offset-1 text-center">
+                    @if (!IsStartButtonClicked)
+                    {
+                        <div id="quiz-options">
+                            <button class="btn quiz-ans-btn animated pulse" @onclick="StartQuiz">Начать</button>
+                        </div>
+                    }
+                    else
+                    {
+                        @if (IsQuizStarted)
+                        {
+                            <p id="quiz-question" class="animated">@QuizItem?.Question</p> // zoomIn and zoomOut styles should be added/removed, when answered
+                            @if (!string.IsNullOrEmpty(QuizItem?.PicturePath))
+                            {
+                                <img src="@QuizItem?.PicturePath" style="height: 100px; width: 100px" />
+                            }
+                            <div id="quiz-options">
+                                @foreach (var variant in QuizItem.Answers.Split("1NZN1"))
+                                {
+                                    <button class="btn quiz-ans-btn animated" @onclick="(e) => NextQuestion(variant)">@variant</button>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="quiz-options">
+                                <button class="btn quiz-ans-btn animated pulse">Результат @TotalScore %</button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<MatDivider />
+
+<MatDialog @bind-IsOpen="@deleteDialogOpen" Style="z-index:100">
+    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
+    <MatDialogContent>
+        Хотите удалить @Quiz.Id ?
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { deleteDialogOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@Delete">Удалить</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+@code {
+    [Parameter]
+    public Quiz Quiz { get; set; }
+
+    public List<QuizItem> UserQuizItems { get; set; } = new List<QuizItem>();
+    public QuizItem QuizItem { get; set; }
+    IEnumerator<QuizItem> Enumerator { get; set; }
+
+    [Parameter]
+    public bool IsAdminOrCoordinator { get; set; }
+
+    bool IsQuizStarted { get; set; } = false;
+    bool IsStartButtonClicked { get; set; } = false;
+    bool deleteDialogOpen = false;
+    double TotalScore { get; set; } = 0;
+    int curentQuestion { get; set; } = 1;
+
+    public async Task Delete()
+    {
+        try
+        {
+            apiClient.RemoveEntity(Quiz);
+            await apiClient.SaveChanges();
+            matToaster.Add($"{Quiz.QuizName} deleted", MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+
+        Quiz = new Quiz();
+    }
+
+    public void CheckResults()
+    {
+        //foreach (var question in UserQuizItems)
+        //{
+        //    if (question.ChoosenAnswer == question.RightAnswer)
+        //    {
+        //        TotalScore++;
+        //    }
+        //}
+        foreach (var question in Quiz.Items)
+        {
+            if(question.RightAnswer == UserQuizItems.Find(x => x.Id == question.Id).RightAnswer)
+            {
+                TotalScore++;
+            }
+        }
+
+
+        TotalScore = TotalScore / UserQuizItems.Count * 100;
+    }
+
+    public void StartQuiz()
+    {
+        IsQuizStarted = true;
+        IsStartButtonClicked = true;
+        Enumerator = Quiz.Items.GetEnumerator();
+        if (Enumerator.MoveNext())
+        {
+            QuizItem = Enumerator.Current;
+        }
+    }
+
+    public void NextQuestion(string variant)
+    {
+        //if(QuizItem.RightAnswer == variant) 
+        //{
+        //    TotalScore++;
+        //}
+        QuizItem.RightAnswer = variant;
+        UserQuizItems.Add(QuizItem);
+        if (Enumerator.MoveNext())
+        {
+            QuizItem = Enumerator.Current;
+            curentQuestion++;
+        }
+        else
+        {
+            CheckResults();
+            IsQuizStarted = false;
+            QuizItem = null;
+        }
+    }
+}

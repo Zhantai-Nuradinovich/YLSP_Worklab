@@ -8,10 +8,11 @@
     <MatDrawer @bind-Opened="@_navMenuOpened">
         <header class="drawer-header">
             <div class="drawer-logo">
-                <img alt="@appState.AppName" class="logo-img" src="_content/BlazorBoilerplate.Theme.Material/images/logo-dark.svg" title="@appState.AppName">
-                <a class="miniHover" href="/">@appState.AppName</a>
+                <a href="/">
+                    <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.Theme.Material/images/logo-work-dark.png">
+                </a>
             </div>
-            <UserProfile />
+            <BlazorBoilerplate.Theme.Material.Shared.Components.UserProfile />
         </header>
         <AdminNavMenu />
     </MatDrawer>
@@ -38,7 +39,6 @@
                 </MatAppBarRow>
             </MatAppBar>
             <MatAppBarContent Style="flex: 1; display: flex; flex-direction: column;">
-                <Breadcrumbs RootLinkTitle="@appState.BreadCrumbHome"></Breadcrumbs>
                 <section class="container-fluid" style="flex: 1;">
                     @Body
                 </section>

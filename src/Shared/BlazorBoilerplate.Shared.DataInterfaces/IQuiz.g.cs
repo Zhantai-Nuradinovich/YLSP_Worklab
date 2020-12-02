@@ -13,7 +13,7 @@ namespace BlazorBoilerplate.Shared.DataInterfaces
         DateTime When { get; set; }
 
        // ICollection<IQuizItem> Items { get; set; }
-        ICollection<IQuizItem> Items { get; set; }
+        ICollection<IQuizItem> Items { get; }
 
         Int32 CourseID { get; set; }
 

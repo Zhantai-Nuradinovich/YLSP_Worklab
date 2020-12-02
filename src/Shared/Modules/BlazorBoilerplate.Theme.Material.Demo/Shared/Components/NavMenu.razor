@@ -3,8 +3,8 @@
 @inject IStringLocalizer<Global> L
 @implements IDynamicComponent
 
-<MatNavItem Href="@navigationManager.ToAbsoluteUri(" ").AbsoluteUri" NavLinkMatch="NavLinkMatch.All">
-    <MatIcon>home</MatIcon> <span class="miniHover">@L["AppNavHome"]</span>
+<MatNavItem Href="@navigationManager.ToAbsoluteUri("admin").AbsoluteUri" Disabled="@(!IsLoggedIn)">
+    <i class="fa fa-gear" aria-hidden="true"></i> <span class="miniHover">@L["AppNavAdmin"]</span>
 </MatNavItem>
 
 <MatNavItem Href="@navigationManager.ToAbsoluteUri("todo_list").AbsoluteUri">
@@ -47,10 +47,6 @@
 
 <MatNavItem Href="@navigationManager.ToAbsoluteUri("forum").AbsoluteUri" Disabled="@(!IsLoggedIn)">
     <MatIcon>forum</MatIcon> <span class="miniHover">@L["AppNavForum"]</span>
-</MatNavItem>
-
-<MatNavItem Href="@navigationManager.ToAbsoluteUri("sponsors").AbsoluteUri">
-    <MatIcon>attach_money</MatIcon> <span class="miniHover">@L["AppNavSponsors"]</span>
 </MatNavItem>
 
 @code {

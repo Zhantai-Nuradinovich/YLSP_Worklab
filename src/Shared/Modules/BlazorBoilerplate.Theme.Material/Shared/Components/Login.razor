@@ -6,12 +6,12 @@
 
 <AuthorizeView Context="AuthorizeContext">
     <Authorized>
-        <MatTooltip Tooltip="@L["Logout"]">
+        <MatTooltip Tooltip="@L["Выйти"]">
             <MatIconButton Icon="exit_to_app" RefBack="@context" OnClick="LogoutClick"></MatIconButton>
         </MatTooltip>
     </Authorized>
     <NotAuthorized>
-        <MatTooltip Tooltip="@L["Login"]">
+        <MatTooltip Tooltip="@L["Войти"]">
             <MatIconButton Icon="account_box" RefBack="@context" Link="@BlazorBoilerplate.Constants.Settings.LoginPath"></MatIconButton>
         </MatTooltip>
     </NotAuthorized>

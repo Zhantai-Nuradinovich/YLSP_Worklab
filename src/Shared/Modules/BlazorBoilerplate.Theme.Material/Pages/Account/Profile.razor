@@ -6,123 +6,125 @@
 @inject IStringLocalizer<Global> L
 @inject IMatToaster matToaster
 
-<h1>@L["User Profile"]</h1>
-<p>User profile management.</p>
-@if (userViewModel == null)
-{
-    <LoadingBackground ShowLogoBox="true"></LoadingBackground>
-}
-else
-{
-    <div class="form-group">
-        <MatButton Type="submit" form="mainForm" Raised="true">@L["Update"]</MatButton>
-        @if (userViewModel.HasPassword)
-        {
-            <MatButton Icon="rotate_right" OnClick="@(() => OpenUpdatePasswordDialog())" Label=@L["Change Password"] Raised="true"></MatButton>
-        }
-        @if (userViewModel.HasAuthenticator)
-        {
-            <MatButton Icon="rotate_right" OnClick="@(() => DisableAuthenticator())" Label=@L["ResetAuthenticator"] Raised="true"></MatButton>
-        }
-    </div>
-    <EditForm id="mainForm" Model="@userViewModel" OnValidSubmit="@UpdateUser">
-        <FluentValidationValidator />
-        <ValidationSummary />
-        <fieldset>
-            <div class="form-group">
-                <MatTextField @bind-Value="@userViewModel.UserName" Label=@L["UserName"] Icon="person" IconTrailing="true" FullWidth="true" Required="true" ReadOnly="true"></MatTextField>
-            </div>
-            <div class="form-group">
-                <MatTextField @bind-Value="@userViewModel.Email" Label="Email" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
-            </div>
-            <div class="form-group">
-                <MatTextField @bind-Value="@userViewModel.FirstName" Label=@L["FirstName"] FullWidth="true"></MatTextField>
-            </div>
-            <div class="form-group">
-                <MatTextField @bind-Value="@userViewModel.LastName" Label=@L["LastName"] FullWidth="true"></MatTextField>
-            </div>
-            <div class="form-group">
-                <strong>@L["Roles"]</strong><br />
-                <MatChipSet>
-                    @foreach (var role in userViewModel.Roles)
-                    {
-                        <MatChip Label="@role"></MatChip>
-                    }
-                </MatChipSet>
-            </div>
-        </fieldset>
-    </EditForm>
-    @if (userViewModel.TwoFactorEnabled)
+
+<MainContainerBase>
+    @if (userViewModel == null)
     {
-        <div class="form-group">
-            <MatSlideToggle @bind-Value="@TwoFactorEnabled" Label=@L["TwoFactorAuthentication"] />
-        </div>
-        @if (userViewModel.BrowserRemembered)
-        {
-            <div class="form-group">
-                <MatSlideToggle @bind-Value="@BrowserRemembered" Label=@L["BrowserRemembered"] />
-            </div>
-        }
-        if (userViewModel.RecoveryCodes != null)
-        {
-            <div class="form-group">
-                <MatChipSet>
-                    @foreach (var rcode in userViewModel.RecoveryCodes)
-                    {
-                        <MatChip Label="@rcode"></MatChip>
-                    }
-                </MatChipSet>
-            </div>
-        }
-        else
-        {
-            <div class="form-group">
-                <span>@L["RecoveryCodesLeft"]</span> @userViewModel.CountRecoveryCodes
-            </div>
-        }
+        <LoadingBackground></LoadingBackground>
     }
     else
     {
-        <h3>@L["TwoFactorAuthentication"]</h3>
-        <p>
-            Download a two-factor authenticator app like Microsoft Authenticator or Google Authenticator.
-        </p>
-        <p>Scan the QR Code or enter this key <kbd>@userViewModel.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
-        <img src="@($"https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={userViewModel.AuthenticatorUri}")" />
-        <p>
-            Once you have scanned the QR code or input the key above, your two factor authentication app will provide you
-            with a unique code. Enter the code in the confirmation box below.
-        </p>
-        <MatTextField @bind-Value="@authenticatorVerificationCodeViewModel.Code" Label=@L["Code"] FullWidth="true"></MatTextField>
-        <MatButton OnClick="@EnableAuthenticator">@L["VerifyCode"]</MatButton>
+        <div class="form-group">
+            <MatButton Type="submit" form="mainForm" Raised="true">@L["Обновить"]</MatButton>
+            @if (userViewModel.HasPassword)
+            {
+                <MatButton Icon="rotate_right" OnClick="@(() => OpenUpdatePasswordDialog())" Label=@L["Поменять пароль"] Raised="true"></MatButton>
+            }
+            @if (userViewModel.HasAuthenticator)
+            {
+                <MatButton Icon="rotate_right" OnClick="@(() => DisableAuthenticator())" Label=@L["Сбросить"] Raised="true"></MatButton>
+            }
+        </div>
+        <EditForm id="mainForm" Model="@userViewModel" OnValidSubmit="@UpdateUser">
+            <FluentValidationValidator />
+            <ValidationSummary />
+            <fieldset>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@userViewModel.UserName" Label=@L["Логин"] Icon="person" IconTrailing="true" FullWidth="true" Required="true" ReadOnly="true"></MatTextField>
+                </div>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@userViewModel.Email" Label="Email" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                </div>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@userViewModel.FirstName" Label=@L["Имя"] FullWidth="true"></MatTextField>
+                </div>
+                <div class="form-group">
+                    <MatTextField @bind-Value="@userViewModel.LastName" Label=@L["Фамилия"] FullWidth="true"></MatTextField>
+                </div>
+                <div class="form-group">
+                    <strong>@L["Роли"]</strong><br />
+                    <MatChipSet>
+                        @foreach (var role in userViewModel.Roles)
+                        {
+                            <MatChip Label="@role"></MatChip>
+                        }
+                    </MatChipSet>
+                </div>
+            </fieldset>
+        </EditForm>
+        @if (userViewModel.TwoFactorEnabled)
+        {
+            <div class="form-group">
+                <MatSlideToggle @bind-Value="@TwoFactorEnabled" Label=@L["TwoFactorAuthentication"] />
+            </div>
+            @if (userViewModel.BrowserRemembered)
+            {
+                <div class="form-group">
+                    <MatSlideToggle @bind-Value="@BrowserRemembered" Label=@L["Запомнить"] />
+                </div>
+            }
+            if (userViewModel.RecoveryCodes != null)
+            {
+                <div class="form-group">
+                    <MatChipSet>
+                        @foreach (var rcode in userViewModel.RecoveryCodes)
+                        {
+                            <MatChip Label="@rcode"></MatChip>
+                        }
+                    </MatChipSet>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <span>@L["RecoveryCodesLeft"]</span> @userViewModel.CountRecoveryCodes
+                </div>
+            }
+        }
+        else
+        {
+            <h3>@L["TwoFactorAuthentication"]</h3>
+            <p>
+                Download a two-factor authenticator app like Microsoft Authenticator or Google Authenticator.
+            </p>
+            <p>Scan the QR Code or enter this key <kbd>@userViewModel.SharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
+            <img src="@($"https://chart.googleapis.com/chart?chs=200x200&chld=M|0&cht=qr&chl={userViewModel.AuthenticatorUri}")" />
+            <p>
+                Once you have scanned the QR code or input the key above, your two factor authentication app will provide you
+                with a unique code. Enter the code in the confirmation box below.
+            </p>
+            <MatTextField @bind-Value="@authenticatorVerificationCodeViewModel.Code" Label=@L["Code"] FullWidth="true"></MatTextField>
+            <MatButton OnClick="@EnableAuthenticator">@L["VerifyCode"]</MatButton>
+        }
+
+        <MatDialog @bind-IsOpen="@updatePasswordDialogOpen">
+            <MatDialogTitle>Password Update for @userViewModel.UserName</MatDialogTitle>
+            <MatDialogContent>
+                <EditForm Model="@updatePasswordViewModel" OnValidSubmit="@UpdatePassword">
+                    <FluentValidationValidator />
+                    <ValidationSummary />
+                    <fieldset>
+                        <div class="form-group">
+                            <MatTextField @bind-Value="@updatePasswordViewModel.CurrentPassword" Label=@L["Текущий пароль"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                        </div>
+                        <div class="form-group">
+                            <MatTextField @bind-Value="@updatePasswordViewModel.NewPassword" Label=@L["Новый пароль"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                        </div>
+                        <div class="form-group">
+                            <MatTextField @bind-Value="@updatePasswordViewModel.NewPasswordConfirm" Label=@L["Повторите пароль"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                        </div>
+                    </fieldset>
+                </EditForm>
+            </MatDialogContent>
+            <MatDialogActions>
+                <MatButton OnClick="@(e => { updatePasswordDialogOpen = false; })">@L["Закрыть"]</MatButton>
+                <MatButton OnClick="@UpdatePassword">@L["Обновить пароль"]</MatButton>
+            </MatDialogActions>
+        </MatDialog>
+
     }
+</MainContainerBase>
 
-    <MatDialog @bind-IsOpen="@updatePasswordDialogOpen">
-        <MatDialogTitle>Password Update for @userViewModel.UserName</MatDialogTitle>
-        <MatDialogContent>
-            <EditForm Model="@updatePasswordViewModel" OnValidSubmit="@UpdatePassword">
-                <FluentValidationValidator />
-                <ValidationSummary />
-                <fieldset>
-                    <div class="form-group">
-                        <MatTextField @bind-Value="@updatePasswordViewModel.CurrentPassword" Label=@L["CurrentPassword"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
-                    </div>
-                    <div class="form-group">
-                        <MatTextField @bind-Value="@updatePasswordViewModel.NewPassword" Label=@L["NewPassword"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
-                    </div>
-                    <div class="form-group">
-                        <MatTextField @bind-Value="@updatePasswordViewModel.NewPasswordConfirm" Label=@L["Password Confirmation"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
-                    </div>
-                </fieldset>
-            </EditForm>
-        </MatDialogContent>
-        <MatDialogActions>
-            <MatButton OnClick="@(e => { updatePasswordDialogOpen = false; })">@L["Cancel"]</MatButton>
-            <MatButton OnClick="@UpdatePassword">@L["Update Password"]</MatButton>
-        </MatDialogActions>
-    </MatDialog>
-
-}
 @code {
     UserViewModel userViewModel;
     bool updatePasswordDialogOpen = false;
@@ -139,7 +141,7 @@ else
                 ForgetTwoFactorClient().ContinueWith(t =>
                 {
                     if (t.IsFaulted)
-                        matToaster.Add(t.Exception.Message, MatToastType.Danger, L["Operation Failed"]);
+                        matToaster.Add(t.Exception.Message, MatToastType.Danger, L["Не удалось"]);
                 });
         }
     }
@@ -153,7 +155,7 @@ else
                 EnableDisable2fa().ContinueWith(t =>
                 {
                     if (t.IsFaulted)
-                        matToaster.Add(t.Exception.Message, MatToastType.Danger, L["Operation Failed"]);
+                        matToaster.Add(t.Exception.Message, MatToastType.Danger, L["Не удалось"]);
                 });
         }
     }
@@ -176,7 +178,7 @@ else
     {
         if (updatePasswordViewModel.NewPassword != updatePasswordViewModel.NewPasswordConfirm)
         {
-            matToaster.Add(L["PasswordConfirmationFailed"], MatToastType.Warning);
+            matToaster.Add(L["Не удалось подтвердить пароль"], MatToastType.Warning);
         }
         else
         {
@@ -185,13 +187,13 @@ else
                 var apiResponse = await identityAuthenticationStateProvider.UpdatePassword(updatePasswordViewModel);
 
                 if (apiResponse.IsSuccessStatusCode)
-                    matToaster.Add(L["UpdatePasswordSuccessful"], MatToastType.Success);
+                    matToaster.Add(L["Пароль успешно обновлен"], MatToastType.Success);
                 else
-                    matToaster.Add(apiResponse.Message, MatToastType.Danger, L["UpdatePasswordFailed"]);
+                    matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось обновить пароль"]);
             }
             catch (Exception ex)
             {
-                matToaster.Add(ex.Message, MatToastType.Danger, L["UpdatePasswordFailed"]);
+                matToaster.Add(ex.Message, MatToastType.Danger, L["Не удалось обновить"]);
             }
 
             updatePasswordDialogOpen = false;
@@ -205,13 +207,13 @@ else
             var apiResponse = await identityAuthenticationStateProvider.UpdateUser(userViewModel);
 
             if (apiResponse.IsSuccessStatusCode)
-                matToaster.Add(L["Operation Successful"], MatToastType.Success);
+                matToaster.Add(L["Операция успешна"], MatToastType.Success);
             else
-                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Operation Failed"]);
+                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось"]);
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, L["Operation Failed"]);
+            matToaster.Add(ex.Message, MatToastType.Danger, L["Не удалось"]);
         }
     }
 
@@ -221,12 +223,12 @@ else
 
         if (apiResponse.IsSuccessStatusCode)
         {
-            matToaster.Add(L["Operation Successful"], MatToastType.Success);
+            matToaster.Add(L["Операция успешна"], MatToastType.Success);
             userViewModel = apiResponse.Result;
             StateHasChanged();
         }
         else
-            matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Operation Failed"]);
+            matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось"]);
 
     }
 
@@ -238,17 +240,17 @@ else
 
             if (apiResponse.IsSuccessStatusCode)
             {
-                matToaster.Add(L["Operation Successful"], MatToastType.Success);
+                matToaster.Add(L["Операция успешна"], MatToastType.Success);
                 userViewModel = apiResponse.Result;
                 authenticatorVerificationCodeViewModel = new AuthenticatorVerificationCodeViewModel();
                 StateHasChanged();
             }
             else
-                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Operation Failed"]);
+                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось"]);
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, L["Operation Failed"]);
+            matToaster.Add(ex.Message, MatToastType.Danger, L["Не удалось"]);
         }
 
     }
@@ -261,13 +263,13 @@ else
 
             if (apiResponse.IsSuccessStatusCode)
             {
-                matToaster.Add(L["Operation Successful"], MatToastType.Success);
+                matToaster.Add(L["Операция успешна"], MatToastType.Success);
                 userViewModel = apiResponse.Result;
                 StateHasChanged();
             }
             else
             {
-                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Operation Failed"]);
+                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось"]);
             }
         }
     }
@@ -278,13 +280,13 @@ else
 
         if (apiResponse.IsSuccessStatusCode)
         {
-            matToaster.Add(L["Operation Successful"], MatToastType.Success);
+            matToaster.Add(L["Операция успешна"], MatToastType.Success);
             userViewModel = apiResponse.Result;
             StateHasChanged();
         }
         else
         {
-            matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Operation Failed"]);
+            matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось"]);
         }
     }
 }

@@ -101,6 +101,7 @@ namespace BlazorBoilerplate.Theme.Material.Demo.Pages
         {
             if (!string.IsNullOrWhiteSpace(messageDto.Text))
             {
+                messageDto.When = DateTime.Now;
                 await Client.Send(messageDto.Text);
 
                 StateHasChanged();

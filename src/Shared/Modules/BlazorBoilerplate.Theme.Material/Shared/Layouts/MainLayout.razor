@@ -7,35 +7,42 @@
     <MatDrawer @bind-Opened="@_navMenuOpened">
         <header class="drawer-header">
             <div class="drawer-logo">
-                <img alt="@appState.AppName" class="logo-img" src="_content/BlazorBoilerplate.Theme.Material/images/logo-dark.svg" title="@appState.AppName">
-                <a class="miniHover" href="/">@appState.AppName</a>
+                <a href="/">
+                    <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.Theme.Material/images/logo-work-dark.png">
+                </a>
             </div>
             <UserProfile />
         </header>
         <NavMenu />
-        <DrawerFooter></DrawerFooter>
     </MatDrawer>
     <MatDrawerContent>
         <MatAppBarContainer Style="display: flex; flex-direction: column; min-height: 100vh;">
-            <MatAppBar Fixed="true">
+            <MatAppBar Fixed="true" Style="background-color: #F8F9FA; border-bottom: 1px solid #D6D5D5; font-family: 'Segoe UI Emoji'">
                 <MatAppBarRow>
                     <MatAppBarSection>
+                        @if (!IsAdminOrCoordinator)
+                        {
+                            <MatAppBarTitle Style="padding-left: 100px">
+                                <div>
+                                    <a href="/">
+                                        <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.Theme.Material/images/logo-work-dark.png">
+                                    </a>
+                                </div>
+                            </MatAppBarTitle>
+                        }
+                        else
+                        {
+                            <div class="hidden-mdc-down">
+                                <MatTooltip Tooltip="@L["AppHoverNavToggle"]">
+                                    <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
+                                </MatTooltip>
+                                <MatTooltip Tooltip="@L["AppHoverNavMinimize"]">
+                                    <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
+                                </MatTooltip>
+                            </div>
+                        }
                         <MatAppBarTitle>
                         </MatAppBarTitle>
-                        <div class="hidden-mdc-down">
-                            <MatTooltip Tooltip="@L["AppHoverNavToggle"]">
-                                <MatIconButton Class="navToggle" Icon="menu" ToggleIcon="menu" OnClick="@((e) => NavToggle())" RefBack="@context"></MatIconButton>
-                            </MatTooltip>
-                            <MatTooltip Tooltip="@L["AppHoverNavMinimize"]">
-                                <MatIconButton Class="navToggle" Icon="format_indent_decrease" ToggleIcon="format_indent_increase" OnClick="@((e) => NavMinify())" RefBack="@context"></MatIconButton>
-                            </MatTooltip>
-                            @*</li>
-        <li>
-            <MatTooltip Tooltip="Lock Navigation">
-                <MatIconButton Class="navToggle" Icon="lock" ToggleIcon="radio_button_unchecked" OnClick="@((e) => NavLock())" RefBack="@context"></MatIconButton>
-            </MatTooltip>
-            </li>*@
-                        </div>
                     </MatAppBarSection>
                     <MatAppBarSection Align="@MatAppBarSectionAlign.End">
                         <TopRightBarSection></TopRightBarSection>
@@ -43,7 +50,6 @@
                 </MatAppBarRow>
             </MatAppBar>
             <MatAppBarContent Style="flex: 1; display: flex; flex-direction: column;">
-                <Breadcrumbs RootLinkTitle="@appState.BreadCrumbHome"></Breadcrumbs>
                 <section class="container-fluid" style="flex: 1;">
                     @Body
                 </section>
@@ -54,8 +60,9 @@
 </MatDrawerContainer>
 
 @code {
-    bool _navMenuOpened = true;
+    bool _navMenuOpened = false;
     bool _navMinified = false;
+    bool IsAdminOrCoordinator { get; set; } = false;
     public string bbDrawerClass = string.Empty;
 
     [CascadingParameter]
@@ -71,6 +78,8 @@
 
             _navMenuOpened = profile.IsNavOpen;
             _navMinified = profile.IsNavMinified;
+
+            IsAdminOrCoordinator = user.IsInRole("Administrator") || user.IsInRole("Coordinator") ? true : false;
         }
     }
 
