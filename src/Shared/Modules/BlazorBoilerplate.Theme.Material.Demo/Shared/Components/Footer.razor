@@ -1,7 +1,52 @@
 ﻿@implements IDynamicComponent
 @inject AppState appState
-©&nbsp;@DateTime.Now.Year&nbsp;<a href="//blazorboilerplate.com">@appState.AppName</a>&nbsp;Version 2.0.0 - Developed by&nbsp;<a href="https://keithfimreite.com" target="_blank">Enkode LLC</a>&nbsp;
-and&nbsp;<a href="https://github.com/enkodellc/blazorboilerplate/graphs/contributors" target="_blank">Github Contributors</a>.
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="row" style="color: black; font-family: sans-serif;">
+                <div class="col-sm-12 col-md-6">
+                    <h6 style="color: black; font-family: sans-serif; text-shadow: 2px 2px 20px black;">Партнеры</h6>
+                    <p class="text-justify">Scanfcode.com <i>CODE WANTS TO BE SIMPLE </i> is an initiative  to help the upcoming programmers with the code. Scanfcode focuses on providing the most efficient code or snippets as the code wants to be simple. We will help programmers build up concepts in different programming languages that include C, C++, Java, HTML, CSS, Bootstrap, JavaScript, PHP, Android, SQL and Algorithm.</p>
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                    <h6 style="color: black; font-family: sans-serif; text-shadow: 2px 2px 20px black;">Worklab</h6>
+                    <ul class="footer-links">
+                        <li><a href="/about-project">О проекте</a></li>
+                        <li><a href="/team">Участники</a></li>
+                        <li><a href="/help">Помощь</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-xs-6 col-md-3">
+                    <h6 style="color: black; font-family: sans-serif; text-shadow: 2px 2px 20px black;">Быстрые ссылки</h6>
+                    <ul class="footer-links">
+                        <li><a href="/about-us">О нас</a></li>
+                        <li><a href="/contacts">Контакты</a></li>
+                        <li><a href="/help-us">Помочь</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-sm-6 col-xs-12">
+                    <p class="copyright-text" style="font-family: sans-serif; text-shadow: 2px 2px 20px black;">
+                        &copy; YLSP Team, все права защищены
+                    </p>
+                </div>
+
+                <div class="col-md-4 col-sm-6 col-xs-12">
+                    <ul class="social-icons">
+                        <li><a class="facebook" target="_blank" href="https://www.facebook.com/ylsp.2020/"><i class="fa fa-facebook"></i></a></li>
+                        <li><a class="dribbble" target="_blank" href="https://www.instagram.com/ylsp_kg/"><i class="fa fa-instagram"></i></a></li>
+                        <li><a class="linkedin" target="_blank" href="#"><i class="fa fa-telegram"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 @code {
     public int Order { get => 1; }

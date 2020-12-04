@@ -27,36 +27,36 @@
                         <MatIconButton Icon="home" Class="float-left" Link="/" />
                     </div>
                     <div class="logo">
-                        <a href="/" title="@appState.AppName Главная"><img src="_content/BlazorBoilerplate.Theme.Material/images/logo-work.png" style="width:100px;" title="@appState.AppName Главная" alt="@appState.AppName" /><br />@appState.AppName</a>
+                        <a href="/" title="@appState.AppName Р“Р»Р°РІРЅР°СЏ"><img src="_content/BlazorBoilerplate.Theme.Material/images/logo-work.png" style="width:100px;" title="@appState.AppName Р“Р»Р°РІРЅР°СЏ" alt="@appState.AppName" /><br />@appState.AppName</a>
                         <br />
-                        <h4>@L["Войти"]</h4>
+                        <h4>@L["Р’РѕР№С‚Рё"]</h4>
                     </div>
                     <EditForm Model="@loginViewModel" OnValidSubmit="@SubmitLogin">
                         <FluentValidationValidator />
                         <ValidationSummary />
                         <fieldset>
                             <div class="form-group">
-                                <MatTextField id="userName" @bind-Value="@loginViewModel.UserName" Label=@L["Логин"] Icon="person" IconTrailing="true" FullWidth="true" Required="true" tabindex="1"></MatTextField>
+                                <MatTextField id="userName" @bind-Value="@loginViewModel.UserName" Label=@L["Р›РѕРіРёРЅ"] Icon="person" IconTrailing="true" FullWidth="true" Required="true" tabindex="1"></MatTextField>
                             </div>
                             <div class="form-group">
-                                <MatTextField @bind-Value="@loginViewModel.Password" Label=@L["Пароль"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password" tabindex="2"></MatTextField>
+                                <MatTextField @bind-Value="@loginViewModel.Password" Label=@L["РџР°СЂРѕР»СЊ"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password" tabindex="2"></MatTextField>
                             </div>
                             <div class="form-group">
-                                <MatButton class="float-right" Type="submit" Raised="true" tabindex="3">@L["Логин"]</MatButton>
+                                <MatButton Style="font-family:cursive;" class="float-right" Type="submit" Raised="true" tabindex="3">@L["Р›РѕРіРёРЅ"]</MatButton>
                                 @if (loginViewModel.AllowRememberLogin)
-                                {<MatCheckbox @bind-Value="@loginViewModel.RememberMe" class="filled-in chk-col-blue">@L["Запомнить"]</MatCheckbox>}
+                                {<MatCheckbox @bind-Value="@loginViewModel.RememberMe" class="filled-in chk-col-blue">@L["Р—Р°РїРѕРјРЅРёС‚СЊ"]</MatCheckbox>}
                             </div>
                         </fieldset>
                     </EditForm>
                     <hr />
                     <div>
-                        <MatButton class="float-left" OnClick="@Register" Raised="true">@L["Зарегистрироваться"]</MatButton>
+                        <MatButton class="float-left" OnClick="@Register" Raised="true">@L["Р—Р°СЂРµРіРёСЃС‚СЂРёСЂРѕРІР°С‚СЊСЃСЏ"]</MatButton>
                     </div>
                 </MatCard>
                 <MatAccordion>
                     <MatExpansionPanel @bind-Expanded="@forgotPasswordToggle">
                         <MatExpansionPanelSummary>
-                            <MatExpansionPanelHeader>@L["Забыли пароль?"]</MatExpansionPanelHeader>
+                            <MatExpansionPanelHeader>@L["Р—Р°Р±С‹Р»Рё РїР°СЂРѕР»СЊ?"]</MatExpansionPanelHeader>
                             <MatExpansionPanelSubHeader></MatExpansionPanelSubHeader>
                         </MatExpansionPanelSummary>
                         <MatExpansionPanelDetails>
@@ -64,10 +64,10 @@
                                 <FluentValidationValidator />
                                 <ValidationSummary />
                                 <div class="form-group">
-                                    <MatTextField @bind-Value="@forgotPasswordViewModel.Email" Label=@L["Почта"] Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
+                                    <MatTextField @bind-Value="@forgotPasswordViewModel.Email" Label=@L["РџРѕС‡С‚Р°"] Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
                                 </div>
                                 <div class="form-group">
-                                    <MatButton class="float-right" Type="submit" Raised="true">@L["Подтвердить"]</MatButton>
+                                    <MatButton class="float-right" Type="submit" Raised="true">@L["РџРѕРґС‚РІРµСЂРґРёС‚СЊ"]</MatButton>
                                 </div>
                             </EditForm>
                         </MatExpansionPanelDetails>
@@ -83,9 +83,9 @@
                     </div>}
                 <div class="logo">
                     @if (!loginViewModel.EnableLocalLogin)
-                    {<a href="/" title="@appState.AppName Home"><img src="_content/BlazorBoilerplate.Theme.Material/images/logo-work.png" style="width:100px;" title="@appState.AppName Главная" alt="@appState.AppName" /><br />@appState.AppName</a>
+                    {<a href="/" title="@appState.AppName Home"><img src="_content/BlazorBoilerplate.Theme.Material/images/logo-work.png" style="width:100px;" title="@appState.AppName Р“Р»Р°РІРЅР°СЏ" alt="@appState.AppName" /><br />@appState.AppName</a>
                     <br />}
-                    <h4>@L["Войти с помощью"]</h4>
+                    <h4>@L["Р’РѕР№С‚Рё СЃ РїРѕРјРѕС‰СЊСЋ"]</h4>
                 </div>
                 <div style="text-align: center">
                     @foreach (var provider in loginViewModel.VisibleExternalProviders)
@@ -115,8 +115,8 @@
         @if (!loginViewModel.EnableLocalLogin && !loginViewModel.VisibleExternalProviders.Any())
         {
     <div class="alert alert-warning">
-        <strong>Неправильный вход</strong>
-        Для этого клиента не настроены схемы входа в систему.
+        <strong>РќРµРїСЂР°РІРёР»СЊРЅС‹Р№ РІС…РѕРґ</strong>
+        Р”Р»СЏ СЌС‚РѕРіРѕ РєР»РёРµРЅС‚Р° РЅРµ РЅР°СЃС‚СЂРѕРµРЅС‹ СЃС…РµРјС‹ РІС…РѕРґР° РІ СЃРёСЃС‚РµРјСѓ.
     </div>
         }
     }
@@ -162,7 +162,7 @@
                 }
             }
             else
-                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось =("]);
+                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["РќРµ СѓРґР°Р»РѕСЃСЊ =("]);
         }
 
         LoginSuccess = false;
@@ -241,11 +241,11 @@
                 LoginSuccess = true;
             }
             else
-                matToaster.Add(response.Message, MatToastType.Danger, L["Не удалось =("]);
+                matToaster.Add(response.Message, MatToastType.Danger, L["РќРµ СѓРґР°Р»РѕСЃСЊ =("]);
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, L["Не удалось =("]);
+            matToaster.Add(ex.Message, MatToastType.Danger, L["РќРµ СѓРґР°Р»РѕСЃСЊ =("]);
         }
     }
 
@@ -254,13 +254,13 @@
         try
         {
             await identityAuthenticationStateProvider.ForgotPassword(forgotPasswordViewModel);
-            matToaster.Add(L["Отправлено"], MatToastType.Success);
+            matToaster.Add(L["РћС‚РїСЂР°РІР»РµРЅРѕ"], MatToastType.Success);
             forgotPasswordViewModel.Email = string.Empty;
             forgotPasswordToggle = false;
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, L["Не удалось поменять пароль =("]);
+            matToaster.Add(ex.Message, MatToastType.Danger, L["РќРµ СѓРґР°Р»РѕСЃСЊ РїРѕРјРµРЅСЏС‚СЊ РїР°СЂРѕР»СЊ =("]);
         }
     }
 }

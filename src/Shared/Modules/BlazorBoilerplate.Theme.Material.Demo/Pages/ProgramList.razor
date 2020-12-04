@@ -4,7 +4,7 @@
 @inject IStringLocalizer<Global> L
 @inject NavigationManager navigationManager
 
-<MainContainer Title="Worklab" SubTitle="Погрузись в эту профессию с головой" ContentTitle="Эконом">
+<MainContainerBase Title="Worklab" SubTitle="Погрузись в эту профессию с головой" ContentTitle="Эконом">
 
     @if (IsAdminOrCoordinator)
     {
@@ -81,7 +81,7 @@
         </MatDialogActions>
     </MatDialog>
 
-</MainContainer>
+</MainContainerBase>
 
 
 @code {

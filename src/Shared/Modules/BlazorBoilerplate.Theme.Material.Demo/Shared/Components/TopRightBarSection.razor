@@ -1,12 +1,7 @@
 ﻿@implements IDynamicComponent
 
-<MatTooltip Tooltip="Главная">
-    <MatIconButton Link="/" RefBack="@context">Home</MatIconButton>
-</MatTooltip>
-<MatTooltip Tooltip="Программы">
-    <MatIconButton Link="/program_list" RefBack="@context">Programs</MatIconButton>
-</MatTooltip>
-<SelectCulture />
+    <a href="/" class="menu__link">Главная</a>
+    <a href="/program_list" class="menu__link">Программы</a>
 <Login />
 
 @code {

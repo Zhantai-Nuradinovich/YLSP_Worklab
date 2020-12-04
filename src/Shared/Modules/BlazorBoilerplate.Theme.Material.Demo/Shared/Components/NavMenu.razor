@@ -4,7 +4,7 @@
 @implements IDynamicComponent
 
 <MatNavItem Href="@navigationManager.ToAbsoluteUri("admin").AbsoluteUri" Disabled="@(!IsLoggedIn)">
-    <i class="fa fa-gear" aria-hidden="true"></i> <span class="miniHover">@L["AppNavAdmin"]</span>
+    <MatIcon>settings</MatIcon> <span class="miniHover">@L["AppNavAdmin"]</span>
 </MatNavItem>
 
 <MatNavItem Href="@navigationManager.ToAbsoluteUri("todo_list").AbsoluteUri">

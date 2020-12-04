@@ -9,7 +9,7 @@
 @using BlazorBoilerplate.Theme.Material.Demo.Shared.Components.Text
 @using BlazorBoilerplate.Theme.Material.Demo.Shared.Components.Quiz
 
-<MainContainer ContentTitle="Начнём!">
+<MainContainerBase ContentTitle="Начнём!">
 
     @if (IsAdminOrCoordinator)
     {
@@ -32,7 +32,7 @@
     </MatButton>
 
     <CommentSection userViewModel="@userViewModel" CourseId="@int.Parse(CourseId)" />
-</MainContainer>
+</MainContainerBase>
 
 @code {
     bool IsAdminOrCoordinator { get; set; } = false;

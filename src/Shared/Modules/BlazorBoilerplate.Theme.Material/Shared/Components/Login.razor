@@ -6,14 +6,19 @@
 
 <AuthorizeView Context="AuthorizeContext">
     <Authorized>
-        <MatTooltip Tooltip="@L["Выйти"]">
-            <MatIconButton Icon="exit_to_app" RefBack="@context" OnClick="LogoutClick"></MatIconButton>
-        </MatTooltip>
+        <a href="@navigationManager.ToAbsoluteUri("help").AbsoluteUri" class="menu__link">Помощь</a>
+        <a href="@navigationManager.ToAbsoluteUri("account/profile").AbsoluteUri" class="menu__link">Личный кабинет</a>
+        <MatButton OnClick="LogoutClick"
+                   Style="background-color: #4F94C1; color: snow; border-radius: 5px">
+            Выйти
+        </MatButton>
     </Authorized>
     <NotAuthorized>
-        <MatTooltip Tooltip="@L["Войти"]">
-            <MatIconButton Icon="account_box" RefBack="@context" Link="@BlazorBoilerplate.Constants.Settings.LoginPath"></MatIconButton>
-        </MatTooltip>
+        <a href="/about-us" class="menu__link">О нас</a>
+        <MatButton Link="@BlazorBoilerplate.Constants.Settings.LoginPath"
+                   Style="background-color: #4F94C1; color: snow; border-radius: 5px">
+            Войти
+        </MatButton>
     </NotAuthorized>
 </AuthorizeView>
 

@@ -4,17 +4,20 @@
 @inject IStringLocalizer<Global> L
 
 <MatDrawerContainer Style="width: 100vw; height: 100vh;" Class="@bbDrawerClass">
-    <MatDrawer @bind-Opened="@_navMenuOpened">
-        <header class="drawer-header">
-            <div class="drawer-logo">
-                <a href="/">
-                    <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.Theme.Material/images/logo-work-dark.png">
-                </a>
-            </div>
-            <UserProfile />
-        </header>
-        <NavMenu />
-    </MatDrawer>
+    @if (IsAdminOrCoordinator)
+    {
+        <MatDrawer @bind-Opened="@_navMenuOpened">
+            <header class="drawer-header">
+                <div class="drawer-logo">
+                    <a href="/">
+                        <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.Theme.Material/images/logo-work-dark.png">
+                    </a>
+                </div>
+                <UserProfile />
+            </header>
+            <NavMenu />
+        </MatDrawer>
+    }
     <MatDrawerContent>
         <MatAppBarContainer Style="display: flex; flex-direction: column; min-height: 100vh;">
             <MatAppBar Fixed="true" Style="background-color: #F8F9FA; border-bottom: 1px solid #D6D5D5; font-family: 'Segoe UI Emoji'">
@@ -25,7 +28,7 @@
                             <MatAppBarTitle Style="padding-left: 100px">
                                 <div>
                                     <a href="/">
-                                        <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.Theme.Material/images/logo-work-dark.png">
+                                        <img alt="Worklab" class="logo-img" src="_content/BlazorBoilerplate.Theme.Material/images/logo-work.png">
                                     </a>
                                 </div>
                             </MatAppBarTitle>
@@ -44,13 +47,17 @@
                         <MatAppBarTitle>
                         </MatAppBarTitle>
                     </MatAppBarSection>
-                    <MatAppBarSection Align="@MatAppBarSectionAlign.End">
-                        <TopRightBarSection></TopRightBarSection>
+                    <MatAppBarSection Align="@MatAppBarSectionAlign.End" Style="padding-right: 100px;">
+                        <div class="menu">
+                            <div class="links">
+                                <TopRightBarSection></TopRightBarSection>
+                            </div>
+                        </div>
                     </MatAppBarSection>
                 </MatAppBarRow>
             </MatAppBar>
-            <MatAppBarContent Style="flex: 1; display: flex; flex-direction: column;">
-                <section class="container-fluid" style="flex: 1;">
+            <MatAppBarContent>
+                <section>
                     @Body
                 </section>
                 <Footer></Footer>
