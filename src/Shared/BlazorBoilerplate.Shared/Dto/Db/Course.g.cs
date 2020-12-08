@@ -9,9 +9,9 @@ namespace BlazorBoilerplate.Shared.Dto.Db
 {
     public partial class Course : BaseEntity, ICourse
     {
-        public Int32 Id
+        public int Id
         {
-            get { return GetValue<Int32>(); }
+            get { return GetValue<int>(); }
             set { SetValue(value); }
         }
 

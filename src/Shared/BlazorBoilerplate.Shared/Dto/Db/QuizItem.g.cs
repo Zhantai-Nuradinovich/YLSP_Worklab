@@ -8,9 +8,9 @@ namespace BlazorBoilerplate.Shared.Dto.Db
 {
     public partial class QuizItem : BaseEntity, IQuizItem
     {
-        public Int32 Id
+        public int Id
         {
-            get { return GetValue<Int32>(); }
+            get { return GetValue<int>(); }
             set { SetValue(value); }
         }
 
@@ -50,9 +50,9 @@ namespace BlazorBoilerplate.Shared.Dto.Db
             set { SetValue(value); }
         }
 
-        public Int32 QuizID
+        public int QuizID
         {
-            get { return GetValue<Int32>(); }
+            get { return GetValue<int>(); }
             set { SetValue(value); }
         }
 

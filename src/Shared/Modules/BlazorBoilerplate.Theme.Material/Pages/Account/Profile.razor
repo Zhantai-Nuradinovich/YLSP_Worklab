@@ -15,34 +15,34 @@
     else
     {
         <div class="form-group">
-            <MatButton Type="submit" form="mainForm" Raised="true">@L["Обновить"]</MatButton>
-            @if (userViewModel.HasPassword)
-            {
-                <MatButton Icon="rotate_right" OnClick="@(() => OpenUpdatePasswordDialog())" Label=@L["Поменять пароль"] Raised="true"></MatButton>
-            }
-            @if (userViewModel.HasAuthenticator)
-            {
-                <MatButton Icon="rotate_right" OnClick="@(() => DisableAuthenticator())" Label=@L["Сбросить"] Raised="true"></MatButton>
-            }
+            <MatButton Type="submit" form="mainForm" Raised="true">@L["Update"]</MatButton>
+             @if (userViewModel.HasPassword)
+             {
+                 <MatButton Icon="rotate_right" OnClick="@(() => OpenUpdatePasswordDialog())" Label=@L["Change Password"] Raised="true"></MatButton>
+             }
+             @if (userViewModel.HasAuthenticator)
+             {
+                 <MatButton Icon="rotate_right" OnClick="@(() => DisableAuthenticator())" Label=@L["ResetAuthenticator"] Raised="true"></MatButton>
+             }
         </div>
         <EditForm id="mainForm" Model="@userViewModel" OnValidSubmit="@UpdateUser">
             <FluentValidationValidator />
             <ValidationSummary />
             <fieldset>
                 <div class="form-group">
-                    <MatTextField @bind-Value="@userViewModel.UserName" Label=@L["Логин"] Icon="person" IconTrailing="true" FullWidth="true" Required="true" ReadOnly="true"></MatTextField>
+                    <MatTextField @bind-Value="@userViewModel.UserName" Label=@L["UserName"] Icon="person" IconTrailing="true" FullWidth="true" Required="true" ReadOnly="true"></MatTextField>
                 </div>
                 <div class="form-group">
                     <MatTextField @bind-Value="@userViewModel.Email" Label="Email" Icon="mail_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
                 </div>
                 <div class="form-group">
-                    <MatTextField @bind-Value="@userViewModel.FirstName" Label=@L["Имя"] FullWidth="true"></MatTextField>
+                    <MatTextField @bind-Value="@userViewModel.FirstName" Label=@L["FirstName"] FullWidth="true"></MatTextField>
                 </div>
                 <div class="form-group">
-                    <MatTextField @bind-Value="@userViewModel.LastName" Label=@L["Фамилия"] FullWidth="true"></MatTextField>
+                    <MatTextField @bind-Value="@userViewModel.LastName" Label=@L["LastName"] FullWidth="true"></MatTextField>
                 </div>
                 <div class="form-group">
-                    <strong>@L["Роли"]</strong><br />
+                    <strong>@L["Roles"]</strong><br />
                     <MatChipSet>
                         @foreach (var role in userViewModel.Roles)
                         {
@@ -60,7 +60,7 @@
             @if (userViewModel.BrowserRemembered)
             {
                 <div class="form-group">
-                    <MatSlideToggle @bind-Value="@BrowserRemembered" Label=@L["Запомнить"] />
+                    <MatSlideToggle @bind-Value="@BrowserRemembered" Label=@L["BrowserRemembered"] />
                 </div>
             }
             if (userViewModel.RecoveryCodes != null)
@@ -105,20 +105,20 @@
                     <ValidationSummary />
                     <fieldset>
                         <div class="form-group">
-                            <MatTextField @bind-Value="@updatePasswordViewModel.CurrentPassword" Label=@L["Текущий пароль"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                            <MatTextField @bind-Value="@updatePasswordViewModel.CurrentPassword" Label=@L["CurrentPassword"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
                         </div>
                         <div class="form-group">
-                            <MatTextField @bind-Value="@updatePasswordViewModel.NewPassword" Label=@L["Новый пароль"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                            <MatTextField @bind-Value="@updatePasswordViewModel.NewPassword" Label=@L["NewPassword"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
                         </div>
                         <div class="form-group">
-                            <MatTextField @bind-Value="@updatePasswordViewModel.NewPasswordConfirm" Label=@L["Повторите пароль"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
+                            <MatTextField @bind-Value="@updatePasswordViewModel.NewPasswordConfirm" Label=@L["Password Confirmation"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password"></MatTextField>
                         </div>
                     </fieldset>
                 </EditForm>
             </MatDialogContent>
             <MatDialogActions>
-                <MatButton OnClick="@(e => { updatePasswordDialogOpen = false; })">@L["Закрыть"]</MatButton>
-                <MatButton OnClick="@UpdatePassword">@L["Обновить пароль"]</MatButton>
+                <MatButton OnClick="@(e => { updatePasswordDialogOpen = false; })">@L["Cancel"]</MatButton>
+                <MatButton OnClick="@UpdatePassword">@L["Update Password"]</MatButton>
             </MatDialogActions>
         </MatDialog>
 
@@ -141,7 +141,7 @@
                 ForgetTwoFactorClient().ContinueWith(t =>
                 {
                     if (t.IsFaulted)
-                        matToaster.Add(t.Exception.Message, MatToastType.Danger, L["Не удалось"]);
+                        matToaster.Add(t.Exception.Message, MatToastType.Danger, L["Operation Failed"]);
                 });
         }
     }
@@ -155,7 +155,7 @@
                 EnableDisable2fa().ContinueWith(t =>
                 {
                     if (t.IsFaulted)
-                        matToaster.Add(t.Exception.Message, MatToastType.Danger, L["Не удалось"]);
+                        matToaster.Add(t.Exception.Message, MatToastType.Danger, L["Operation Failed"]);
                 });
         }
     }
@@ -178,7 +178,7 @@
     {
         if (updatePasswordViewModel.NewPassword != updatePasswordViewModel.NewPasswordConfirm)
         {
-            matToaster.Add(L["Не удалось подтвердить пароль"], MatToastType.Warning);
+            matToaster.Add(L["PasswordConfirmationFailed"], MatToastType.Warning);
         }
         else
         {
@@ -187,13 +187,13 @@
                 var apiResponse = await identityAuthenticationStateProvider.UpdatePassword(updatePasswordViewModel);
 
                 if (apiResponse.IsSuccessStatusCode)
-                    matToaster.Add(L["Пароль успешно обновлен"], MatToastType.Success);
+                    matToaster.Add(L["UpdatePasswordSuccessful"], MatToastType.Success);
                 else
-                    matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось обновить пароль"]);
+                    matToaster.Add(apiResponse.Message, MatToastType.Danger, L["UpdatePasswordFailed"]);
             }
             catch (Exception ex)
             {
-                matToaster.Add(ex.Message, MatToastType.Danger, L["Не удалось обновить"]);
+                matToaster.Add(ex.Message, MatToastType.Danger, L["UpdatePasswordFailed"]);
             }
 
             updatePasswordDialogOpen = false;
@@ -207,13 +207,13 @@
             var apiResponse = await identityAuthenticationStateProvider.UpdateUser(userViewModel);
 
             if (apiResponse.IsSuccessStatusCode)
-                matToaster.Add(L["Операция успешна"], MatToastType.Success);
+                matToaster.Add(L["Operation Successful"], MatToastType.Success);
             else
-                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось"]);
+                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Operation Failed"]);
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, L["Не удалось"]);
+            matToaster.Add(ex.Message, MatToastType.Danger, L["Operation Failed"]);
         }
     }
 
@@ -223,12 +223,12 @@
 
         if (apiResponse.IsSuccessStatusCode)
         {
-            matToaster.Add(L["Операция успешна"], MatToastType.Success);
+            matToaster.Add(L["Operation Successful"], MatToastType.Success);
             userViewModel = apiResponse.Result;
             StateHasChanged();
         }
         else
-            matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось"]);
+            matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Operation Failed"]);
 
     }
 
@@ -240,17 +240,17 @@
 
             if (apiResponse.IsSuccessStatusCode)
             {
-                matToaster.Add(L["Операция успешна"], MatToastType.Success);
+                matToaster.Add(L["Operation Successful"], MatToastType.Success);
                 userViewModel = apiResponse.Result;
                 authenticatorVerificationCodeViewModel = new AuthenticatorVerificationCodeViewModel();
                 StateHasChanged();
             }
             else
-                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось"]);
+                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Operation Failed"]);
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, L["Не удалось"]);
+            matToaster.Add(ex.Message, MatToastType.Danger, L["Operation Failed"]);
         }
 
     }
@@ -263,13 +263,13 @@
 
             if (apiResponse.IsSuccessStatusCode)
             {
-                matToaster.Add(L["Операция успешна"], MatToastType.Success);
+                matToaster.Add(L["Operation Successful"], MatToastType.Success);
                 userViewModel = apiResponse.Result;
                 StateHasChanged();
             }
             else
             {
-                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось"]);
+                matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Operation Failed"]);
             }
         }
     }
@@ -280,13 +280,13 @@
 
         if (apiResponse.IsSuccessStatusCode)
         {
-            matToaster.Add(L["Операция успешна"], MatToastType.Success);
+            matToaster.Add(L["Operation Successful"], MatToastType.Success);
             userViewModel = apiResponse.Result;
             StateHasChanged();
         }
         else
         {
-            matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Не удалось"]);
+            matToaster.Add(apiResponse.Message, MatToastType.Danger, L["Operation Failed"]);
         }
     }
 }

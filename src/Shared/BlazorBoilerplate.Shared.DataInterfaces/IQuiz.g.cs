@@ -6,7 +6,7 @@ namespace BlazorBoilerplate.Shared.DataInterfaces
 {
     public interface IQuiz
     {
-        Int32 Id { get; set; }
+        int Id { get; set; }
 
         String QuizName { get; set; }
 
@@ -15,7 +15,7 @@ namespace BlazorBoilerplate.Shared.DataInterfaces
        // ICollection<IQuizItem> Items { get; set; }
         ICollection<IQuizItem> Items { get; }
 
-        Int32 CourseID { get; set; }
+        int CourseID { get; set; }
 
         ICourse Course { get; set; }
     }

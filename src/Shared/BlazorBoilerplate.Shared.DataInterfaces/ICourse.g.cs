@@ -6,7 +6,7 @@ namespace BlazorBoilerplate.Shared.DataInterfaces
 {
     public interface ICourse
     {
-        Int32 Id { get; set; }
+        int Id { get; set; }
         String DirectionName { get; set; }
         String CourseName { get; set; }
         String PicturePath { get; set; }

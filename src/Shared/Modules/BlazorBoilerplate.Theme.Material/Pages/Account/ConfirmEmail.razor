@@ -13,7 +13,7 @@
     <div class="logo">
         <img src="_content/BlazorBoilerplate.Theme.Material/images/logo-work.png" style="width:100px;" /><br /> Worklab
         <br />
-        <h4>@L["Подтвердить почту"]</h4>
+        <h4>@L["Confirm Email"]</h4>
     </div>
     <EditForm Model="@confirmEmailViewModel" OnValidSubmit="@SendConfirmation">
         <FluentValidationValidator />
@@ -26,7 +26,7 @@
                 <MatTextField @bind-Value="@confirmEmailViewModel.Token" Label="Token" Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true"></MatTextField>
             </div>
             <div class="form-group d-flex justify-content-end">
-                <MatButton Type="submit" Raised="true" Disabled="@disableConfirmButton">@L["Отправить письмо"]</MatButton>
+                <MatButton Type="submit" Raised="true" Disabled="@disableConfirmButton">@L["Send Confirmation"]</MatButton>
             </div>
         </fieldset>
     </EditForm>
@@ -75,7 +75,7 @@
         }
         catch (Exception ex)
         {
-            matToaster.Add(ex.Message, MatToastType.Danger, L["Не удалось подтвердить почту"]);
+            matToaster.Add(ex.Message, MatToastType.Danger, L["EmailVerificationFailed"]);
         }
     }
 }

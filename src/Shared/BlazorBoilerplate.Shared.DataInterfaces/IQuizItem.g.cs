@@ -6,7 +6,7 @@ namespace BlazorBoilerplate.Shared.DataInterfaces
 {
     public interface IQuizItem
     {
-        Int32 Id { get; set; }
+        int Id { get; set; }
 
         String Question { get; set; }
 
@@ -20,7 +20,7 @@ namespace BlazorBoilerplate.Shared.DataInterfaces
 
         DateTime When { get; set; }
 
-        Int32 QuizID { get; set; }
+        int QuizID { get; set; }
 
         IQuiz Quiz { get; set; }
     }

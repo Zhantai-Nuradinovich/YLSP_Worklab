@@ -8,9 +8,9 @@ namespace BlazorBoilerplate.Shared.Dto.Db
 {
     public partial class Text : BaseEntity, IText
     {
-        public Int32 Id
+        public int Id
         {
-            get { return GetValue<Int32>(); }
+            get { return GetValue<int>(); }
             set { SetValue(value); }
         }
 
@@ -26,9 +26,9 @@ namespace BlazorBoilerplate.Shared.Dto.Db
             set { SetValue(value); }
         }
 
-        public Int32 CourseID
+        public int CourseID
         {
-            get { return GetValue<Int32>(); }
+            get { return GetValue<int>(); }
             set { SetValue(value); }
         }
 

@@ -6,7 +6,7 @@ namespace BlazorBoilerplate.Shared.DataInterfaces
 {
     public interface IComment
     {
-        Int32 Id { get; set; }
+        int Id { get; set; }
 
         String UserName { get; set; }
 
@@ -14,7 +14,7 @@ namespace BlazorBoilerplate.Shared.DataInterfaces
 
         DateTime When { get; set; }
 
-        Int32 CourseID { get; set; }
+        int CourseID { get; set; }
 
         ICourse Course { get; set; }
 

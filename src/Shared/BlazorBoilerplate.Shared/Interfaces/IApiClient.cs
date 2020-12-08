@@ -23,6 +23,8 @@ namespace BlazorBoilerplate.Shared.Interfaces
 
         Task<QueryResult<Quiz>> GetQuizzes(Int32 courseID);
 
+        Task<QueryResult<Quiz>> GetQuiz(string quizName);
+
         Task<QueryResult<QuizItem>> GetQuizItems(Int32 quizID);
 
         Task<QueryResult<Text>> GetTexts(Int32 courseID);

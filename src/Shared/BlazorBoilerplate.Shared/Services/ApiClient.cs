@@ -52,23 +52,28 @@ namespace BlazorBoilerplate.Shared.Services
             return await GetItems<Course>(from: "Courses", orderByDescending: i => i.DirectionName);
         }
 
-        public async Task<QueryResult<Quiz>> GetQuizzes(Int32 courseID)
+        public async Task<QueryResult<Quiz>> GetQuizzes(int courseID)
         {
             return await GetItems<Quiz>(from: "Quizzes", predicate: i => i.CourseID == courseID, orderByDescending: j => j.When);
         }
 
-        public async Task<QueryResult<QuizItem>> GetQuizItems(Int32 quizID)
+        public async Task<QueryResult<Quiz>> GetQuiz(string quizName)
         {
-            return await GetItems<QuizItem>(from: "QuizItems", predicate: i => i.QuizID == quizID, orderByDescending: i => i.When);
+            return await GetItems<Quiz>(from: "Quizzes", predicate: i => i.QuizName == quizName);
+        }
+
+        public async Task<QueryResult<QuizItem>> GetQuizItems(int quizID)
+        {
+            return await GetItems<QuizItem>(from: "QuizItems", predicate: i => i.QuizID == quizID, orderByDescending: k => k.When);
         }
 
 
-        public async Task<QueryResult<Text>> GetTexts(Int32 courseID)
+        public async Task<QueryResult<Text>> GetTexts(int courseID)
         {
             return await GetItems<Text>(from: "Texts", predicate: i => i.CourseID == courseID, orderByDescending: i => i.When);
         }
 
-        public async Task<QueryResult<Comment>> GetComments(Int32 courseID)
+        public async Task<QueryResult<Comment>> GetComments(int courseID)
         {
             return await GetItems<Comment>(from: "Comments", predicate: i => i.CourseID == courseID, orderByDescending: i => i.When);
         }
