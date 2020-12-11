@@ -49,12 +49,12 @@ namespace BlazorBoilerplate.Shared.Services
 
         public async Task<QueryResult<Course>> GetCourses()
         {
-            return await GetItems<Course>(from: "Courses", orderByDescending: i => i.DirectionName);
+            return await GetItems<Course>(from: "Courses", orderBy: i => i.DirectionName);
         }
 
         public async Task<QueryResult<Quiz>> GetQuizzes(int courseID)
         {
-            return await GetItems<Quiz>(from: "Quizzes", predicate: i => i.CourseID == courseID, orderByDescending: j => j.When);
+            return await GetItems<Quiz>(from: "Quizzes", predicate: i => i.CourseID == courseID, orderBy: j => j.When);
         }
 
         public async Task<QueryResult<Quiz>> GetQuiz(string quizName)
@@ -64,18 +64,18 @@ namespace BlazorBoilerplate.Shared.Services
 
         public async Task<QueryResult<QuizItem>> GetQuizItems(int quizID)
         {
-            return await GetItems<QuizItem>(from: "QuizItems", predicate: i => i.QuizID == quizID, orderByDescending: k => k.When);
+            return await GetItems<QuizItem>(from: "QuizItems", predicate: i => i.QuizID == quizID, orderBy: k => k.When);
         }
 
 
         public async Task<QueryResult<Text>> GetTexts(int courseID)
         {
-            return await GetItems<Text>(from: "Texts", predicate: i => i.CourseID == courseID, orderByDescending: i => i.When);
+            return await GetItems<Text>(from: "Texts", predicate: i => i.CourseID == courseID, orderBy: i => i.When);
         }
 
         public async Task<QueryResult<Comment>> GetComments(int courseID)
         {
-            return await GetItems<Comment>(from: "Comments", predicate: i => i.CourseID == courseID, orderByDescending: i => i.When);
+            return await GetItems<Comment>(from: "Comments", predicate: i => i.CourseID == courseID, orderBy: i => i.When);
         }
     }
 }

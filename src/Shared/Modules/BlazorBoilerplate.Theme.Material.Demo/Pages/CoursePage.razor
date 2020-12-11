@@ -69,7 +69,6 @@
         //await ReadQuizItems();
         content.AddRange(quizzes);
         content.AddRange(texts);
-        content =
         content = content.OrderBy(t => t is Quiz? ((Quiz)t).When : ((Text)t).When).ToList();
 
         enumerator = content.GetEnumerator();

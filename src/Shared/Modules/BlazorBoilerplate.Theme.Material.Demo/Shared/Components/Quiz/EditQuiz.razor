@@ -121,9 +121,9 @@
     {
         try
         {
-            var result = await apiClient.GetQuizItems(Quiz.Id);
+            var result = await apiClient.GetQuizItems(QuizId);
             quizItems = new List<QuizItem>(result);
-            matToaster.Add($"{Quiz.QuizName} deleted", MatToastType.Success, L["Operation Successful"]);
+            matToaster.Add($"{Quiz.QuizName} items got", MatToastType.Success, L["Operation Successful"]);
         }
         catch (Exception ex)
         {
@@ -146,8 +146,6 @@
     {
         try
         {
-            QuizItem.Id = QuizId;
-
             QuizItem.When = DateTime.Now;
 
             quizItems.Add(QuizItem);
@@ -160,46 +158,49 @@
         QuizItem = new QuizItem();
     }
 
-    public async Task NewQuizItems()
-    {
-        foreach (var item in quizItems)
-        {
-            try
-            {
-                apiClient.AddEntity(item);
-
-                await apiClient.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
-                apiClient.RemoveEntity(Quiz);
-                await apiClient.SaveChanges();
-            }
-        }
-
-        await GetItems();
-
-        StateHasChanged();
-
-        quizItems = new List<QuizItem>();
-        Quiz = new Quiz() { When = DateTime.Now };
-    }
-
-    public async Task SaveChanges()
+    public async Task NewQuizItems() // В БД, почему-то, айдишник вопроса типа лонг, надо исправить....
     {
         try
         {
-            await NewQuizItems();
+            foreach (var item in quizItems)
+            {
+                if(item.QuizID != Quiz.Id)
+                {
+                    item.QuizID = Quiz.Id;
+                    apiClient.AddEntity(item);
+                }
+            }
 
             await apiClient.SaveChanges();
-
-            matToaster.Add($"{Quiz.QuizName} updated", MatToastType.Success, L["Operation Successful"]);
         }
         catch (Exception ex)
         {
             matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
         }
+
+        await GetItems();
+
+        StateHasChanged();
+    }
+
+    public async Task SaveChanges()
+    {
+        await NewQuizItems();
+
+        try
+        {
+            //Чтобы обновить сам тест, не вопросы, нужно вытянуть из БД и сделать команду savechanges, чтобы это было в рамках одного юзинга
+            await apiClient.SaveChanges();
+
+            matToaster.Add($"{Quiz.Id} updated", MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+            matToaster.Add($"error on {Quiz.Id}", MatToastType.Danger, L["Operation Failed"]);
+        }
+
+        dialogIsOpen = false;
     }
 
     public async Task DeleteQuestion(QuizItem quizItem)
@@ -226,17 +227,16 @@
     {
         try
         {
-            if (quizItems.Count != 0)
-            {
-                foreach (var item in quizItems)
-                {
-                    apiClient.RemoveEntity(item);
-                    await apiClient.SaveChanges();
-                }
-            }
+            //if (quizItems.Count != 0)
+            //{
+            //    foreach (var item in quizItems)
+            //    {
+            //        apiClient.RemoveEntity(item);
+            //    }
+            //}
             apiClient.RemoveEntity(Quiz);
             await apiClient.SaveChanges();
-            matToaster.Add($"{Quiz.QuizName} deleted", MatToastType.Success, L["Operation Successful"]);
+            matToaster.Add($"{Quiz.Id} deleted", MatToastType.Success, L["Operation Successful"]);
         }
         catch (Exception ex)
         {

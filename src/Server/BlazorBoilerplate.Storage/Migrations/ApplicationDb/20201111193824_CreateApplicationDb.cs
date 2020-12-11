@@ -387,7 +387,7 @@ namespace BlazorBoilerplate.Storage.Migrations.ApplicationDb
                 name: "QuizItems",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Question = table.Column<string>(nullable: false),
                     QuestionType = table.Column<string>(nullable: true),

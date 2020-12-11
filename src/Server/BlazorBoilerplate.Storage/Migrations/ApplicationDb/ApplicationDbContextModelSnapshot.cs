@@ -358,9 +358,9 @@ namespace BlazorBoilerplate.Storage.Migrations.ApplicationDb
 
             modelBuilder.Entity("BlazorBoilerplate.Infrastructure.Storage.DataModels.QuizItem", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
+                        .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Answers")
