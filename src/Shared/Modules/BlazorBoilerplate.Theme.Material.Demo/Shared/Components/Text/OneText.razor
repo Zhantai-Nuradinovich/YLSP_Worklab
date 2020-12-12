@@ -1,4 +1,11 @@
-﻿<h3>OneText</h3>
+﻿
+<div style="min-height: 400px;">
+    @if (Text != null)
+    {
+        @((MarkupString)Text?.TextContent)
+    }
+</div>
+<MatDivider />
 
 @code {
     [Parameter]

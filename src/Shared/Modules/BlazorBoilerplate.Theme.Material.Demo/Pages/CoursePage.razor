@@ -17,14 +17,15 @@
         <CreateText CourseId="@(int.Parse(CourseId))" />
     }
     <p class="heading">Надо посмотреть что-нибудь о пагинации контента и попробовать через енумератор. Продумать структуру как у курсеры и добавить привязку к пользователю + почитать об аналитике сайта</p>
-    @if (oneContent is Quiz quiz)
+    @if (oneContent is Quiz)
     {
         <MatIconButton Icon="delete" OnClick="@(() => deleteQuizDialogOpen = true)"></MatIconButton>
-        <OneQuiz Quiz="@quiz" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
+        <OneQuiz Quiz="@(oneContent as Quiz)" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
     }
-    else if (oneContent is Text text)
+    else
     {
-        <OneText Text="@text" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
+        <MatIconButton Icon="delete" OnClick="@(() => deleteTextDialogOpen = true)"></MatIconButton>
+        <OneText Text="@(oneContent as Text)" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
     }
 
     <MatButton Label="Вперед"
@@ -38,34 +39,44 @@
 <MatDialog @bind-IsOpen="@deleteQuizDialogOpen" Style="z-index:100">
     <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
     <MatDialogContent>
-        Хотите удалить @(((Quiz)oneContent)?.Id) ?
+        Хотите удалить @((oneContent as Quiz)?.Id) ?
     </MatDialogContent>
     <MatDialogActions>
         <MatButton OnClick="@(e => { deleteQuizDialogOpen = false; })">Закрыть</MatButton>
-        <MatButton OnClick="@(e => DeleteQuiz(((Quiz)oneContent)))">Удалить</MatButton>
+        <MatButton OnClick="@(e => DeleteQuiz(oneContent as Quiz))">Удалить</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@deleteTextDialogOpen" Style="z-index:100">
+    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
+    <MatDialogContent>
+        Хотите удалить @((oneContent as Text)?.Id) ?
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { deleteTextDialogOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@(e => DeleteText(oneContent as Text))">Удалить</MatButton>
     </MatDialogActions>
 </MatDialog>
 
 @code {
-    bool IsAdminOrCoordinator { get; set; } = false;
+        bool IsAdminOrCoordinator { get; set; } = false;
 
-    [Parameter]
-    public string CourseId { get; set; }
+        [Parameter]
+        public string CourseId { get; set; }
 
-    UserViewModel userViewModel { get; set; } = new UserViewModel();
-    List<Quiz> quizzes = new List<Quiz>();
+        UserViewModel userViewModel { get; set; } = new UserViewModel();
+        List<Quiz> quizzes = new List<Quiz>();
+        List<Text> texts = new List<Text>();
+        List<object> content { get; set; } = new List<object>();
 
-    bool deleteQuizDialogOpen = false;
-    bool deleteTextDialogOpen = false;
-    
-    List<Text> texts = new List<Text>();
-    List<object> content { get; set; } = new List<object>();
+        bool deleteQuizDialogOpen = false;
+        bool deleteTextDialogOpen = false;
 
-    IEnumerator<object> enumerator;
-    object oneContent;
+        IEnumerator<object> enumerator;
+        object oneContent;
 
-    [CascadingParameter]
-    Task<AuthenticationState> authenticationStateTask { get; set; }
+        [CascadingParameter]
+        Task<AuthenticationState> authenticationStateTask { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -80,10 +91,9 @@
 
         await ReadTexts();
         await ReadQuizzes();
-        //await ReadQuizItems();
         content.AddRange(quizzes);
         content.AddRange(texts);
-        content = content.OrderBy(t => t is Quiz? ((Quiz)t).When : ((Text)t).When).ToList();
+        content = content.OrderBy(t => t is Quiz ? (t as Quiz).When : (t as Text).When).ToList();
 
         enumerator = content.GetEnumerator();
 

@@ -62,8 +62,19 @@
                     }
                     else
                     {
-                        <InputTextArea @bind-Value="comment.Text"/>
-                        <MatButton Style="background-color: #4F94C1; color: snow; border-radius: 5px; margin: 10px;" OnClick="CreateMessage">Отправить</MatButton>
+                        <InputText id="btn btn-input"
+                                   class="form-control"
+                                   placeholder="Набирайте сообщение тут..."
+                                   aria-label="Message"
+                                   @bind-Value="@comment.Text" />
+                        <div class="input-group-append">
+                            <button @onclick="CreateMessage"
+                                    class="btn btn-warning"
+                                    ref="createButton"
+                                    type="submit">
+                                Отправить
+                            </button>
+                        </div>
                     }
                 </div>
             </EditForm>
