@@ -31,7 +31,7 @@
                     @if (!IsStartButtonClicked)
                     {
                         <div id="quiz-options">
-                            @if(quizItems.Count != 0)
+                            @if(quizItems != null && quizItems.Count != 0)
                             {
                                 <button class="btn quiz-ans-btn animated pulse" @onclick="StartQuiz">Начать</button>
                             }
@@ -115,7 +115,7 @@
         //        TotalScore++;
         //    }
         //}
-        foreach (var question in Quiz.Items)
+        foreach (var question in quizItems)
         {
             if(question.RightAnswer == UserQuizItems.Find(x => x.Id == question.Id).RightAnswer)
             {

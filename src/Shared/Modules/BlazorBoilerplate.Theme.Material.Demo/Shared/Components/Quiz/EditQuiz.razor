@@ -6,8 +6,6 @@
 @* Добавить плюсик, после которого появляются две нижние кнопки *@
 <MatButton OnClick="@((e) => NewQuestionDialogOpen() )">Добавить вопрос</MatButton>
 <MatButton OnClick="@((e) => DialogOpen() )">Редактировать</MatButton>
-<MatIconButton Icon="delete" OnClick="@(() => deleteDialogOpen = true)"></MatIconButton>
-
 
 <MatDialog Class="modal" @bind-IsOpen="@dialogIsOpen">
     <MatDialogTitle Class="modal-dialog modal-lg">Обновить</MatDialogTitle>
@@ -86,16 +84,6 @@
     </MatDialogActions>
 </MatDialog>
 
-<MatDialog @bind-IsOpen="@deleteDialogOpen" Style="z-index:100">
-    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
-    <MatDialogContent>
-        Хотите удалить @Quiz?.Id ?
-    </MatDialogContent>
-    <MatDialogActions>
-        <MatButton OnClick="@(e => { deleteDialogOpen = false; })">Закрыть</MatButton>
-        <MatButton OnClick="@DeleteQuiz">Удалить</MatButton>
-    </MatDialogActions>
-</MatDialog>
 
 @code {
     [Parameter]
@@ -110,7 +98,6 @@
 
     bool questionDialogIsOpen = false;
     bool dialogIsOpen = false;
-    bool deleteDialogOpen = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -189,7 +176,7 @@
 
         try
         {
-            //Чтобы обновить сам тест, не вопросы, нужно вытянуть из БД и сделать команду savechanges, чтобы это было в рамках одного юзинга
+            //Чтобы обновить сам тест, не вопросы, нужно вытянуть из БД и сделать команду savechanges, чтобы это было в рамках одного юзинга, относится также к удалению
             await apiClient.SaveChanges();
 
             matToaster.Add($"{Quiz.Id} updated", MatToastType.Success, L["Operation Successful"]);
@@ -221,29 +208,5 @@
         {
             matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
         }
-    }
-
-    public async Task DeleteQuiz()
-    {
-        try
-        {
-            //if (quizItems.Count != 0)
-            //{
-            //    foreach (var item in quizItems)
-            //    {
-            //        apiClient.RemoveEntity(item);
-            //    }
-            //}
-            apiClient.RemoveEntity(Quiz);
-            await apiClient.SaveChanges();
-            matToaster.Add($"{Quiz.Id} deleted", MatToastType.Success, L["Operation Successful"]);
-        }
-        catch (Exception ex)
-        {
-            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
-        }
-
-        Quiz = new Quiz();
-        deleteDialogOpen = false;
     }
 }

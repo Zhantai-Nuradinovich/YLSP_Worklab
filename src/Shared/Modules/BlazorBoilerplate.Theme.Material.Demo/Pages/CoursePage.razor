@@ -19,6 +19,7 @@
     <p class="heading">Надо посмотреть что-нибудь о пагинации контента и попробовать через енумератор. Продумать структуру как у курсеры и добавить привязку к пользователю + почитать об аналитике сайта</p>
     @if (oneContent is Quiz quiz)
     {
+        <MatIconButton Icon="delete" OnClick="@(() => deleteQuizDialogOpen = true)"></MatIconButton>
         <OneQuiz Quiz="@quiz" IsAdminOrCoordinator="@IsAdminOrCoordinator" />
     }
     else if (oneContent is Text text)
@@ -34,6 +35,17 @@
     <CommentSection userViewModel="@userViewModel" CourseId="@int.Parse(CourseId)" />
 </MainContainerBase>
 
+<MatDialog @bind-IsOpen="@deleteQuizDialogOpen" Style="z-index:100">
+    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
+    <MatDialogContent>
+        Хотите удалить @(((Quiz)oneContent)?.Id) ?
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { deleteQuizDialogOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@(e => DeleteQuiz(((Quiz)oneContent)))">Удалить</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
 @code {
     bool IsAdminOrCoordinator { get; set; } = false;
 
@@ -41,9 +53,11 @@
     public string CourseId { get; set; }
 
     UserViewModel userViewModel { get; set; } = new UserViewModel();
-
     List<Quiz> quizzes = new List<Quiz>();
-    //List<QuizItem> quizItems = new List<QuizItem>();
+
+    bool deleteQuizDialogOpen = false;
+    bool deleteTextDialogOpen = false;
+    
     List<Text> texts = new List<Text>();
     List<object> content { get; set; } = new List<object>();
 
@@ -98,26 +112,22 @@
         }
     }
 
-    //async Task ReadQuizItems()
-    //{
-    //    foreach (var quiz in quizzes)
-    //    {
-    //        try
-    //        {
-    //            var result = await apiClient.GetQuizItems(quiz.Id);
-    //            var middleware = new List<QuizItem>(result);
-    //            foreach (var item in middleware)
-    //            {
-    //                quiz.Items.Add(item);
-    //            }
-    //            matToaster.Add(L["One item found", Plural.From("{0} items found", (int)result.InlineCount)], MatToastType.Success, L["Operation Successful"]);
-    //        }
-    //        catch (Exception ex)
-    //        {
-    //            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
-    //        }
-    //    }
-    //}
+    public async Task DeleteQuiz(Quiz quiz)
+    {
+        try
+        {
+            apiClient.RemoveEntity(quiz);
+            await apiClient.SaveChanges();
+            content.Remove(quiz);
+            matToaster.Add($"{quiz.Id} deleted", MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+
+        deleteQuizDialogOpen = false;
+    }
 
     async Task ReadTexts()
     {
@@ -131,5 +141,22 @@
         {
             matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
         }
+    }
+
+    public async Task DeleteText(Text text)
+    {
+        try
+        {
+            apiClient.RemoveEntity(text);
+            await apiClient.SaveChanges();
+            content.Remove(text);
+            matToaster.Add($"{text.Id} deleted", MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+
+        deleteTextDialogOpen = false;
     }
 }
