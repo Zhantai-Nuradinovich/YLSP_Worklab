@@ -1,5 +1,105 @@
-﻿<h3>EditText</h3>
+﻿@inject IApiClient apiClient
+@inject IMatToaster matToaster
+@inject IStringLocalizer<Global> L
+
+
+<MatButton OnClick="@((e) => DialogOpen() )">Редактировать</MatButton>
+<MatIconButton Icon="delete" OnClick="@(() => deleteTextDialogOpen = true)"></MatIconButton>
+
+<MatDialog Class="modal" @bind-IsOpen="@dialogIsOpen">
+    <MatDialogTitle Class="modal-dialog modal-lg">Обновить</MatDialogTitle>
+    <MatDialogContent Class="modal-content">
+        <EditForm Model="@Text">
+            <fieldset>
+                <div class="col-xl-6">
+                    <h3>Инструменты</h3>
+                    <RadzenHtmlEditor @bind-Value=@value style="height: 500px; margin-bottom: 1rem;" UploadUrl="wwwroot/images" />
+                </div>
+            </fieldset>
+            <MatDivider />
+        </EditForm>
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { dialogIsOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@SaveChanges">Обновить</MatButton>
+    </MatDialogActions>
+</MatDialog>
+
+<MatDialog @bind-IsOpen="@deleteTextDialogOpen" Style="z-index:100">
+    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
+    <MatDialogContent>
+        Хотите удалить @(Text?.Id) ?
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { deleteTextDialogOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@(e => DeleteText())">Удалить</MatButton>
+    </MatDialogActions>
+</MatDialog>
 
 @code {
+    [Parameter]
+    public int TextId { get; set; }
 
+    public Text Text { get; set; } = new Text();
+    string value = "";
+
+    bool dialogIsOpen = false;
+    bool deleteTextDialogOpen = false;
+
+    public async Task GetText()
+    {
+        try
+        {
+            var result = await apiClient.GetText(TextId);
+            Text = new List<Text>(result).First();
+            value = Text?.TextContent;
+            matToaster.Add($"text {Text?.Id} got", MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+    }
+
+    public async Task SaveChanges()
+    {
+        try
+        {
+            Text.TextContent = value;
+            await apiClient.SaveChanges();
+
+            matToaster.Add($"{Text.Id} updated", MatToastType.Success, L["Operation Successful"]);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+
+        dialogIsOpen = false;
+    }
+
+    public async Task DialogOpen()
+    {
+        dialogIsOpen = true;
+        await GetText();
+    }
+
+    public async Task DeleteText()
+    {
+        try
+        {
+            await GetText();
+            apiClient.RemoveEntity(Text);
+            await apiClient.SaveChanges();
+            matToaster.Add($"{Text.Id} deleted", MatToastType.Success, L["Operation Successful"]);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+
+        deleteTextDialogOpen = false;
+    }
 }

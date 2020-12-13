@@ -49,6 +49,8 @@
             apiClient.AddEntity(Quiz);
 
             await apiClient.SaveChanges();
+            matToaster.Add($"text {Quiz?.Id} created", MatToastType.Success, L["Operation Successful"]);
+            StateHasChanged();
         }
         catch (Exception ex)
         {

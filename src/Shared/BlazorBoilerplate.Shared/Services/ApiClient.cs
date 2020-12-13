@@ -57,9 +57,9 @@ namespace BlazorBoilerplate.Shared.Services
             return await GetItems<Quiz>(from: "Quizzes", predicate: i => i.CourseID == courseID, orderBy: j => j.When);
         }
 
-        public async Task<QueryResult<Quiz>> GetQuiz(string quizName)
+        public async Task<QueryResult<Quiz>> GetQuiz(int quizID)
         {
-            return await GetItems<Quiz>(from: "Quizzes", predicate: i => i.QuizName == quizName);
+            return await GetItems<Quiz>(from: "Quizzes", predicate: i => i.Id == quizID);
         }
 
         public async Task<QueryResult<QuizItem>> GetQuizItems(int quizID)
@@ -71,6 +71,11 @@ namespace BlazorBoilerplate.Shared.Services
         public async Task<QueryResult<Text>> GetTexts(int courseID)
         {
             return await GetItems<Text>(from: "Texts", predicate: i => i.CourseID == courseID, orderBy: i => i.When);
+        }
+
+        public async Task<QueryResult<Text>> GetText(int textID)
+        {
+            return await GetItems<Text>(from: "Texts", predicate: i => i.Id == textID);
         }
 
         public async Task<QueryResult<Comment>> GetComments(int courseID)

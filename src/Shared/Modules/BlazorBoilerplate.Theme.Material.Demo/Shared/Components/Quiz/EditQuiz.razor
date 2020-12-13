@@ -2,10 +2,11 @@
 @inject IMatToaster matToaster
 @inject IStringLocalizer<Global> L
 
-
 @* Добавить плюсик, после которого появляются две нижние кнопки *@
 <MatButton OnClick="@((e) => NewQuestionDialogOpen() )">Добавить вопрос</MatButton>
 <MatButton OnClick="@((e) => DialogOpen() )">Редактировать</MatButton>
+<MatIconButton Icon="delete" OnClick="@(() => deleteQuizDialogOpen = true)"></MatIconButton>
+
 
 <MatDialog Class="modal" @bind-IsOpen="@dialogIsOpen">
     <MatDialogTitle Class="modal-dialog modal-lg">Обновить</MatDialogTitle>
@@ -84,13 +85,22 @@
     </MatDialogActions>
 </MatDialog>
 
+<MatDialog @bind-IsOpen="@deleteQuizDialogOpen" Style="z-index:100">
+    <MatDialogTitle><MatIcon Icon="warning"></MatIcon> Подтвердить</MatDialogTitle>
+    <MatDialogContent>
+        Хотите удалить @(Quiz?.Id) ?
+    </MatDialogContent>
+    <MatDialogActions>
+        <MatButton OnClick="@(e => { deleteQuizDialogOpen = false; })">Закрыть</MatButton>
+        <MatButton OnClick="@(e => DeleteQuiz())">Удалить</MatButton>
+    </MatDialogActions>
+</MatDialog>
 
 @code {
     [Parameter]
     public int QuizId { get; set; }
 
-    [Parameter]
-    public Quiz Quiz { get; set; }
+    public Quiz Quiz { get; set; } = new Quiz();
 
     public List<QuizItem> quizItems { get; set; } = new List<QuizItem>();
 
@@ -98,10 +108,20 @@
 
     bool questionDialogIsOpen = false;
     bool dialogIsOpen = false;
+    bool deleteQuizDialogOpen = false;
 
-    protected override async Task OnInitializedAsync()
+    public async Task GetQuiz()
     {
-        await GetItems();
+        try
+        {
+            var result = await apiClient.GetQuiz(QuizId);
+            Quiz = new List<Quiz>(result).First();
+            matToaster.Add($"quiz {Quiz?.QuizName} got", MatToastType.Success, L["Operation Successful"]);
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
     }
 
     public async Task GetItems()
@@ -118,14 +138,20 @@
         }
     }
 
-    public void NewQuestionDialogOpen()
+    public async Task NewQuestionDialogOpen()
     {
+        await GetQuiz();
+        await GetItems();
+
         questionDialogIsOpen = true;
         dialogIsOpen = false;
     }
 
-    public void DialogOpen()
+    public async Task DialogOpen()
     {
+        await GetQuiz();
+        await GetItems();
+
         dialogIsOpen = true;
     }
 
@@ -151,7 +177,7 @@
         {
             foreach (var item in quizItems)
             {
-                if(item.QuizID != Quiz.Id)
+                if (item.QuizID != Quiz.Id)
                 {
                     item.QuizID = Quiz.Id;
                     apiClient.AddEntity(item);
@@ -208,5 +234,23 @@
         {
             matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
         }
+    }
+
+    public async Task DeleteQuiz()
+    {
+        try
+        {
+            await GetQuiz();
+            apiClient.RemoveEntity(Quiz);
+            await apiClient.SaveChanges();
+            matToaster.Add($"{Quiz.Id} deleted", MatToastType.Success, L["Operation Successful"]);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
+        }
+
+        deleteQuizDialogOpen = false;
     }
 }

@@ -17,22 +17,6 @@
                     <h3>Инструменты</h3>
                     <RadzenHtmlEditor @bind-Value=@value style="height: 500px; margin-bottom: 1rem;" UploadUrl="wwwroot/images"  />
                 </div>
-                @*<div class="col-xl-6">
-                    <h3>Custom set of tools (text-editing only)</h3>
-                    <RadzenHtmlEditor @bind-Value=@value style="height: 500px; margin-bottom: 1rem;" UploadUrl="upload/image">
-                        <RadzenHtmlEditorUndo />
-                        <RadzenHtmlEditorRedo />
-                        <RadzenHtmlEditorSeparator />
-                        <RadzenHtmlEditorBold />
-                        <RadzenHtmlEditorItalic />
-                        <RadzenHtmlEditorUnderline />
-                        <RadzenHtmlEditorStrikeThrough />
-                        <RadzenHtmlEditorSeparator />
-                        <RadzenHtmlEditorColor />
-                        <RadzenHtmlEditorBackground />
-                        <RadzenHtmlEditorRemoveFormat />
-                    </RadzenHtmlEditor>
-                </div>*@
             </fieldset>
             <MatDivider />
         </EditForm>
@@ -67,6 +51,8 @@
             apiClient.AddEntity(Text);
 
             await apiClient.SaveChanges();
+            matToaster.Add($"text {Text?.Id} created", MatToastType.Success, L["Operation Successful"]);
+            StateHasChanged();
         }
         catch (Exception ex)
         {

@@ -1,15 +1,24 @@
 ﻿
+
+@if (IsAdminOrCoordinator)
+{
+    <EditText TextId="TextId" />
+}
+
 <div style="min-height: 400px;">
     @if (Text != null)
     {
-        @((MarkupString)Text?.TextContent)
+        @((MarkupString)Text)
     }
 </div>
 <MatDivider />
 
 @code {
     [Parameter]
-    public Text Text { get; set; }
+    public string Text { get; set; }
+
+    [Parameter]
+    public int TextId { get; set; }
 
     [Parameter]
     public bool IsAdminOrCoordinator { get; set; }
