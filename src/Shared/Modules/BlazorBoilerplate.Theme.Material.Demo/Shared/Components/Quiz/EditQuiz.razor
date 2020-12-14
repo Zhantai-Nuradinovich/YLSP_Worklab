@@ -32,6 +32,10 @@
                                @onchange="@(e => newQuestion.RightAnswer = e.Value.ToString())" />
                     </div>
                     <div class="form-group">
+                        <input placeholder="Тип вопроса" id="@($"{newQuestion?.QuestionType}")" value="@newQuestion?.QuestionType"
+                               @onchange="@(e => newQuestion.QuestionType = e.Value.ToString())" />
+                    </div>
+                    <div class="form-group">
                         <input placeholder="Путь к картинке" id="@($"{newQuestion?.PicturePath}")" value="@newQuestion?.PicturePath"
                                @onchange="@(e => newQuestion.PicturePath = e.Value.ToString())" />
                     </div>
@@ -69,6 +73,11 @@
                 <div class="form-group">
                     <p>
                         <MatTextField @bind-Value="@QuizItem.RightAnswer" Label="Правильный ответ"></MatTextField>
+                    </p>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <MatTextField @bind-Value="@QuizItem.QuestionType" Label="Тип вопроса"></MatTextField>
                     </p>
                 </div>
                 <div class="form-group">
@@ -243,7 +252,7 @@
             await GetQuiz();
             apiClient.RemoveEntity(Quiz);
             await apiClient.SaveChanges();
-            matToaster.Add($"{Quiz.Id} deleted", MatToastType.Success, L["Operation Successful"]);
+            matToaster.Add($"{Quiz.Id} deleted, reload", MatToastType.Success, L["Operation Successful"]);
             StateHasChanged();
         }
         catch (Exception ex)
