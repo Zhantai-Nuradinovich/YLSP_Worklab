@@ -31,9 +31,14 @@
                     @if (!IsStartButtonClicked)
                     {
                         <div id="quiz-options">
-                            @if(quizItems != null && quizItems.Count != 0)
+                            @if (quizItems != null && quizItems.Count != 0)
                             {
-                                <button class="btn quiz-ans-btn animated pulse" @onclick="StartQuiz">Начать</button>
+                                <Animation Effect="@Effect.ZoomInDown"
+                                           Speed="@Speed.Fast"
+                                           Delay="@Delay.None"
+                                           IterationCount="1">
+                                    <button class="btn quiz-ans-btn animated pulse" @onclick="StartQuiz">Начать</button>
+                                </Animation>
                             }
                         </div>
                     }
@@ -41,22 +46,65 @@
                     {
                         @if (IsQuizStarted)
                         {
-                            <p id="quiz-question" class="animated">@QuizItem?.Question</p> // zoomIn and zoomOut styles should be added/removed, when answered
-                            @if (!string.IsNullOrEmpty(QuizItem?.PicturePath))
-                            {
-                                <img src="@QuizItem?.PicturePath" style="height: 100px; width: 100px" />
-                            }
+                            <p id="quiz-question" class="animated">
+                                <Animation Effect="@Effect.ZoomIn" Speed="@Speed.Fast" Delay="@Delay.None" Enabled="IsAnimated" IterationCount="1" OnAnimationEnd="AnimationEnd">
+                                    @QuizItem?.Question
+                                    @if (!string.IsNullOrEmpty(QuizItem?.PicturePath))
+                                    {
+                                        if (!IsTimeIsUp)
+                                        {
+                                            <img src="@QuizItem?.PicturePath" style="height: 400px; width: 400px" />
+                                        }
+                                        if (QuizItem.QuestionType == "Photo")
+                                        {
+                                            //Нужно добавить свойство для вопроса для указания времени задержки
+                                            //Добавить типы в перечисления и вариант с вводом текста
+                                            Task.Delay(10000).ContinueWith(t => { IsTimeIsUp = true; StateHasChanged(); });
+                                        }
+                                    }
+                                </Animation>
+                            </p>
                             <div id="quiz-options">
-                                @foreach (var variant in QuizItem?.Answers.Split("1NZN1"))
-                                {
-                                    <button class="btn quiz-ans-btn animated" @onclick="(e) => NextQuestion(variant)">@variant</button>
-                                }
+                                <div id="quiz-options">
+                                    <Animation Effect="@Effect.SlideInDown"
+                                               Speed="@Speed.Fast"
+                                               Delay="@Delay.None"
+                                               Enabled="IsAnimated"
+                                               IterationCount="1"
+                                               OnAnimationEnd="AnimationEnd">
+                                        @foreach (var variant in QuizItem?.Answers.Split("1NZN1"))
+                                        {
+                                            @if (QuizItem.QuestionType == "Photo")
+                                            {
+                                                if (IsTimeIsUp)
+                                                {
+                                                    <button class="btn quiz-ans-btn animated"
+                                                            @onclick="(e) => { NextQuestion(variant); RunAnimation(); }">
+                                                        <img src="@variant" style="height: 300px; width: 300px" />
+                                                    </button>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <button class="btn quiz-ans-btn animated"
+                                                        @onclick="(e) => { NextQuestion(variant); RunAnimation(); }">
+                                                    @variant
+                                                </button>
+                                            }
+                                        }
+                                    </Animation>
+                                </div>
                             </div>
                         }
                         else
                         {
                             <div id="quiz-options">
-                                <button class="btn quiz-ans-btn animated pulse">Результат @TotalScore %</button>
+                                <Animation Effect="@Effect.ZoomInDown"
+                                           Speed="@Speed.Fast"
+                                           Delay="@Delay.None"
+                                           IterationCount="1">
+                                    <button class="btn quiz-ans-btn animated pulse">Результат @TotalScore %</button>
+                                </Animation>
                             </div>
                         }
                     }
@@ -84,6 +132,9 @@
 
     bool IsQuizStarted { get; set; } = false;
     bool IsStartButtonClicked { get; set; } = false;
+    bool IsTimeIsUp { get; set; } = false;
+    bool IsAnimated { get; set; } = true;
+
     double TotalScore { get; set; } = 0;
     int curentQuestion { get; set; } = 1;
 
@@ -104,6 +155,16 @@
         {
             matToaster.Add(ex.GetBaseException().Message, MatToastType.Danger, L["Operation Failed"]);
         }
+    }
+
+    private void RunAnimation()
+    {
+        IsAnimated = true;
+    }
+
+    private void AnimationEnd()
+    {
+        IsAnimated = false;
     }
 
     public void CheckResults()
@@ -157,5 +218,7 @@
             IsQuizStarted = false;
             QuizItem = null;
         }
+
+        StateHasChanged();
     }
 }
