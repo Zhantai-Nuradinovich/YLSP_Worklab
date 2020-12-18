@@ -178,6 +178,14 @@
         }
     }
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !RedirectInProgress)
+            await js.InvokeVoidAsync("interop.SetFocus", "userName");
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
     void SignInWith(ExternalProvider provider)
     {
         if (!string.IsNullOrEmpty(ReturnUrl))
