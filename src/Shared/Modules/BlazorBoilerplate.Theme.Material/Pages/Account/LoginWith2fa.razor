@@ -36,8 +36,7 @@
                     <ValidationSummary />
                     <fieldset>
                         <div class="form-group">
-                            <MatTextField @ref="CodeInput" @bind-Value="@loginViewModel.TwoFactorCode" Label=@L["Code"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password" tabindex="1"></MatTextField>
-                            <AutoFocus Control=@(() => CodeInput.InputRef) />
+                            <MatTextField id="code" @bind-Value="@loginViewModel.TwoFactorCode" Label=@L["Code"] Icon="lock_outline" IconTrailing="true" FullWidth="true" Required="true" Type="password" tabindex="1"></MatTextField>
                         </div>
                         <div class="form-group">
                             <MatButton class="float-right" Type="submit" Raised="true" tabindex="2">@L["Login"]</MatButton>
@@ -70,8 +69,6 @@
     </NotAuthorized>
 </AuthorizeView>
 @code {
-
-    private MatTextField<string> CodeInput;
 
     string navigateTo = null;
     IdentityAuthenticationStateProvider identityAuthenticationStateProvider;
@@ -111,6 +108,14 @@
             if (user.Identity.IsAuthenticated && navigateTo != null)
                 navigationManager.NavigateTo(navigateTo);
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !RedirectInProgress)
+            await js.InvokeVoidAsync("interop.SetFocus", "code");
+
+        await base.OnAfterRenderAsync(firstRender);
     }
 
     async Task SubmitLogin()
