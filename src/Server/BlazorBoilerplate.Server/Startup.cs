@@ -562,8 +562,8 @@ namespace BlazorBoilerplate.Server
             });
             //}
 
-            services.AddTransient<ILocalizationApiClient, LocalizationApiClient>();
-            services.AddTransient<IApiClient, ApiClient>();
+            services.AddScoped<ILocalizationApiClient, LocalizationApiClient>();
+            services.AddScoped<IApiClient, ApiClient>();
 
             // Authentication providers
             Log.Logger.Debug("Removing AuthenticationStateProvider...");
