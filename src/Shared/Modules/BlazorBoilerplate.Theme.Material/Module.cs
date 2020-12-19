@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
 using Toolbelt.Blazor.Extensions.DependencyInjection;
-using Radzen;
 
 namespace BlazorBoilerplate.Theme.Material
 {
@@ -39,11 +38,6 @@ namespace BlazorBoilerplate.Theme.Material
                 config.MaximumOpacity = 95;
                 config.VisibleStateDuration = 3000;
             });
-
-            services.AddScoped<DialogService>();
-            services.AddScoped<NotificationService>();
-            services.AddScoped<TooltipService>();
-            services.AddScoped<ContextMenuService>();
         }
 
         public void ConfigureWebAssemblyServices(IServiceCollection services)
@@ -62,11 +56,6 @@ namespace BlazorBoilerplate.Theme.Material
             var sp = services.BuildServiceProvider();
             
             sp.GetRequiredService<HttpClient>().EnableIntercept(sp);
-
-            services.AddScoped<DialogService>();
-            services.AddScoped<NotificationService>();
-            services.AddScoped<TooltipService>();
-            services.AddScoped<ContextMenuService>();
         }
 
         public void ConfigureWebAssemblyHost(WebAssemblyHost webAssemblyHost)
